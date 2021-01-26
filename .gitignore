@@ -1,0 +1,23 @@
+# idea
+.idea
+*.iml
+
+# building
+target
+build
+tmp*
+dist
+test-output
+build.log
+dependency-reduced-pom.xml
+
+# other scm
+.svn
+.CVS
+.hg*
+
+#  project
+logs/
+
+# mac
+.DS_Store
