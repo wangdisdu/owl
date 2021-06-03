@@ -1,5 +1,5 @@
 # owl
 
-## A Awesome Management Tool
+## Awesome Query Tool
 
-owl is a tool for managing Apache Kafka, Elasticsearch, Redis, JDBC and so on.
+owl is a tool for Apache Kafka, Elasticsearch, Mongodb, Redis, JDBC and so on.
