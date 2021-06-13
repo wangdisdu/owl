@@ -1,24 +1,22 @@
 package com.owl.integration.elasticsearch;
 
-import cn.hutool.core.util.StrUtil;
 import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.common.JsonUtil;
-import org.apache.calcite.adapter.elasticsearch.ElasticsearchSchemaFactory;
+import com.owl.integration.elasticsearch.calcite.ElasticsearchSchemaFactory;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 @Integration(
         display = "Elasticsearch",
-        description = "Elasticsearch Integration"
+        description = "Elasticsearch Integration",
+        sqlPlaceholder = "SELECT * FROM `INDEX_NAME`"
 )
 public class ElasticsearchIntegration implements IntegrationBuilder<ElasticsearchConfig> {
     private IntegrationContext context;
@@ -47,19 +45,15 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
         info.setProperty("FUN", "MYSQL");
         Connection con = DriverManager.getConnection("jdbc:calcite:", info);
         CalciteConnection connection = con.unwrap(CalciteConnection.class);
-
         SchemaPlus rootSchema = connection.getRootSchema();
-        Map<String, Object> operand = new HashMap<>();
-        operand.put("hosts", JsonUtil.encode(StrUtil.split(config.getHosts(),',')));
-        operand.put("index", config.getIndex());
+        Map<String, Object> operand = config.getParameters();
+        //operand.put("hosts", JsonUtil.encode(StrUtil.split(config.getHosts(),',')));
         ElasticsearchSchemaFactory factory = new ElasticsearchSchemaFactory();
         Schema schema = factory.create(rootSchema, "default", operand);
         for (String tableName: schema.getTableNames()) {
             org.apache.calcite.schema.Table t = schema.getTable(tableName);
             rootSchema.add(tableName, t);
         }
-
-        rootSchema.add("default", schema);
         return con;
     }
 }

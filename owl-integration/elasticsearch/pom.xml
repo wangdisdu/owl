@@ -12,6 +12,10 @@
 
     <artifactId>elasticsearch</artifactId>
 
+    <properties>
+        <elasticsearch.version>7.13.1</elasticsearch.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.owl</groupId>
@@ -26,14 +30,36 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-core</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-elasticsearch</artifactId>
-            <version>${calcite.version}</version>
+            <artifactId>calcite-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>${elasticsearch.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

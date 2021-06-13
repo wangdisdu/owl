@@ -8,6 +8,7 @@ public class IntegrationMeta {
     private String description;
     private String icon;
     private String document;
+    private String sqlPlaceholder;
     private List<ParameterMeta> parameters;
 
     public String getBuilder() {
@@ -48,6 +49,14 @@ public class IntegrationMeta {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public String getSqlPlaceholder() {
+        return sqlPlaceholder;
+    }
+
+    public void setSqlPlaceholder(String sqlPlaceholder) {
+        this.sqlPlaceholder = sqlPlaceholder;
     }
 
     public List<ParameterMeta> getParameters() {

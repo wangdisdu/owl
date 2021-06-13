@@ -55,6 +55,7 @@ export default {
   name: "SqlEditor",
   data() {
     return {
+      integration: null,
       editor: null,
       listLoading:false,
       columns: [],
@@ -62,6 +63,9 @@ export default {
       pageSize: 10,
       currentPage: 1
     }
+  },
+  created() {
+    this.loadData()
   },
   mounted() {
     this.editor = CodeMirror.fromTextArea(this.$refs.sqleditor, {
@@ -86,15 +90,22 @@ export default {
     this.editor.on("keypress", editor => {
       editor.showHint();
     });
-    this.editor.setValue('SELECT * FROM')
   },
   methods: {
+    loadData() {
+      //删除前缀'integration-'
+      const id = this.$route.name.substring(12)
+      integrationAPI.get(id).then(response => {
+        this.integration = response.result
+        this.editor.setValue(this.integration.meta.sqlPlaceholder)
+      }).catch(() => {})
+    },
     handleCurrentChange(val) {
       this.currentPage = val
     },
     handleFilter() {
       const data = {
-        name: this.$route.name.substring(12), //删除前缀'integration-'
+        name: this.integration.name, 
         sql: this.editor.getValue()
       }
       this.listLoading = true

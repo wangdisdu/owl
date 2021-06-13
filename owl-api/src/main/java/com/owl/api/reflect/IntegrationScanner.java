@@ -29,6 +29,7 @@ public class IntegrationScanner {
             meta.setDescription(annotation.description());
             meta.setIcon(annotation.icon());
             meta.setDocument(annotation.document());
+            meta.setSqlPlaceholder(annotation.sqlPlaceholder());
         }
         return meta;
     }

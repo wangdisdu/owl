@@ -12,4 +12,5 @@ public @interface Integration {
     String description() default "";
     String icon() default "";
     String document() default "";
+    String sqlPlaceholder() default "";
 }

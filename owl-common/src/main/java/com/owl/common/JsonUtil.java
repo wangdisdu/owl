@@ -41,6 +41,10 @@ public class JsonUtil {
         return MAPPER.readValue(value, valueType);
     }
 
+    public static <T> T decode(JsonNode json, Class<T> valueType) throws IOException {
+        return MAPPER.convertValue(json, valueType);
+    }
+
     public static <T> T decodeUnSafe(String value, Class<T> valueType) {
         try {
             return decode(value, valueType);
@@ -61,6 +65,10 @@ public class JsonUtil {
         }
     }
 
+    public static <T> T decode(JsonNode json, TypeReference<T> valueTypeRef) throws IOException {
+        return MAPPER.convertValue(json, valueTypeRef);
+    }
+
     public static Map<String, Object> decode2Map(String value) throws IOException {
         return decode(value, new TypeReference<Map<String, Object>>() {});
     }
@@ -71,6 +79,14 @@ public class JsonUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    public static Map<String, Object> decode2Map(JsonNode json) throws IOException {
+        return decode(json, new TypeReference<Map<String, Object>>() {});
+    }
+
+    public static JsonNode decode2Tree(InputStream is) throws IOException {
+        return MAPPER.readTree(is);
     }
 
     public static JsonNode decode2Tree(String value) throws IOException {

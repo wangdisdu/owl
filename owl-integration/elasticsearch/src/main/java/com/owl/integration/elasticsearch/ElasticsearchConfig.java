@@ -5,14 +5,29 @@ import com.owl.api.IntegrationConfig;
 import com.owl.api.annotation.Parameter;
 
 public class ElasticsearchConfig extends SmartConfig implements IntegrationConfig {
-    @Parameter
+    @Parameter(
+            display = "地址",
+            placeholder = "host1:9200,host2:9200"
+    )
     private String hosts;
-    @Parameter
-    private String index;
-    @Parameter(required = false)
+
+    @Parameter(
+            display = "账号",
+            required = false
+    )
     private String username;
-    @Parameter(required = false)
+
+    @Parameter(
+            display = "密码",
+            required = false
+    )
     private String password;
+
+    @Parameter(
+            display = "URL前缀",
+            required = false
+    )
+    private String pathPrefix;
 
     public String getHosts() {
         return hosts;
@@ -20,14 +35,6 @@ public class ElasticsearchConfig extends SmartConfig implements IntegrationConfi
 
     public void setHosts(String hosts) {
         this.hosts = hosts;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
     }
 
     public String getUsername() {
@@ -44,5 +51,13 @@ public class ElasticsearchConfig extends SmartConfig implements IntegrationConfi
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPathPrefix() {
+        return pathPrefix;
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
     }
 }

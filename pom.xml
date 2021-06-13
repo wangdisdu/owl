@@ -23,27 +23,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
 
-        <!--<spring-boot.version>2.2.1.RELEASE</spring-boot.version>-->
         <calcite.version>1.26.0</calcite.version>
         <slf4j.version>1.7.30</slf4j.version>
         <jackson.version>2.10.5</jackson.version>
-        <jackson.databind.version>2.10.5</jackson.databind.version>
-        <!--<mysql.version>8.0.17</mysql.version>
-        <sqlite.version>3.28.0</sqlite.version>-->
+        <jackson.databind.version>2.10.5.1</jackson.databind.version>
+        <commons-lang3.version>3.8</commons-lang3.version>
+        <commons-codec.version>1.12</commons-codec.version>
+        <httpcore.version>4.4.14</httpcore.version>
+        <httpclient.version>4.5.13</httpclient.version>
+        <httpasyncclient.version>4.1.4</httpasyncclient.version>
         <hutool.version>5.5.7</hutool.version>
         <guava.version>30.0-jre</guava.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--<dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
-
             <dependency>
                 <groupId>org.apache.calcite</groupId>
                 <artifactId>calcite-core</artifactId>
@@ -55,6 +49,7 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
@@ -66,10 +61,47 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.databind.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpcore.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpasyncclient</artifactId>
+                <version>${httpasyncclient.version}</version>
             </dependency>
 
             <dependency>
@@ -83,19 +115,7 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-<!--
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.version}</version>
-            </dependency>
 
-            <dependency>
-                <groupId>org.xerial</groupId>
-                <artifactId>sqlite-jdbc</artifactId>
-                <version>${sqlite.version}</version>
-            </dependency>
--->
         </dependencies>
     </dependencyManagement>
 

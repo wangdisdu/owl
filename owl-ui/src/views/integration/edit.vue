@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="100px">
+    <el-form ref="form" :model="form" label-width="160px">
       <el-form-item label="名称">
         <el-input v-model="form.name" disabled/>
       </el-form-item>
@@ -13,7 +13,7 @@
         :prop="'config.' + parameter.name"
         :label="parameter.display" 
         :rules="parameter.required ? requiredRule : noneRule">
-        <el-input v-model="form.config[parameter.name]" />
+        <el-input v-model="form.config[parameter.name]" :placeholder="parameter.placeholder" />
       </el-form-item>
       <el-form-item label="描述">
         <el-input v-model="form.description" type="textarea" />

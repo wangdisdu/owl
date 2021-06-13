@@ -13,10 +13,6 @@
     <artifactId>mongodb</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-mongodb</artifactId>
-            <version>${calcite.version}</version>
-        </dependency>
+
     </dependencies>
 </project>

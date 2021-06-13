@@ -11,6 +11,9 @@ test-output
 build.log
 dependency-reduced-pom.xml
 
+# debug
+owl/db/owl_db.sqlite
+
 # other scm
 .svn
 .CVS
