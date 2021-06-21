@@ -1,14 +1,15 @@
 package com.owl.web.service;
 
 import com.owl.api.annotation.IntegrationMeta;
+import com.owl.api.schema.DataFrame;
+import com.owl.api.schema.IntegrationSchema;
 import com.owl.web.common.ContextHolder;
 import com.owl.web.dao.entity.TbIntegration;
 import com.owl.web.dao.service.TbIntegrationService;
-import com.owl.web.model.integration.Dataset;
 import com.owl.web.model.integration.IntegrationQuery;
 import com.owl.web.model.integration.IntegrationReq;
 import com.owl.web.model.integration.IntegrationResp;
-import com.owl.web.provider.IntegrationCoreService;
+import com.owl.web.provider.IntegrationPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,10 @@ public class IntegrationService {
     @Autowired
     private TbIntegrationService tbIntegrationService;
     @Autowired
-    private IntegrationCoreService integrationCoreService;
+    private IntegrationPoolService integrationPoolService;
 
     public List<IntegrationMeta> builders() {
-        return integrationCoreService.scan();
+        return integrationPoolService.scan();
     }
 
     public List<IntegrationResp> list() {
@@ -65,8 +66,13 @@ public class IntegrationService {
         return get(req.getName());
     }
 
-    public Dataset query(IntegrationQuery req) {
+    public DataFrame query(IntegrationQuery req) {
         TbIntegration entity = tbIntegrationService.exists(req.getName());
-        return integrationCoreService.query(entity, req);
+        return integrationPoolService.query(entity, req);
+    }
+
+    public IntegrationSchema schema(String name) {
+        TbIntegration entity = tbIntegrationService.exists(name);
+        return integrationPoolService.schema(entity);
     }
 }

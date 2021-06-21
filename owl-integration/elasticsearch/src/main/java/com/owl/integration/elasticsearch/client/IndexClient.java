@@ -6,9 +6,11 @@ import com.owl.integration.elasticsearch.client.request.SearchRequest;
 import com.owl.integration.elasticsearch.client.response.SearchResponse;
 import org.elasticsearch.client.Request;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 
-public class IndexClient {
+public class IndexClient implements Closeable {
     private final EsClient esClient;
     private final String index;
 
@@ -42,5 +44,10 @@ public class IndexClient {
         } catch (Exception e) {
             throw new EsCallException("failed request " + request.getEndpoint(), e);
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        esClient.close();
     }
 }

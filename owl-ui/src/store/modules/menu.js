@@ -31,7 +31,7 @@ const actions = {
               path: 'index',
               name: id,
               component: () => import('@/views/query/index'),
-              meta: { title: name, icon: 'form' }
+              meta: { title: name, icon: 'integration' }
             }
           ]
         })

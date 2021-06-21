@@ -2,11 +2,11 @@ package com.owl.core;
 
 import cn.hutool.core.util.ReflectUtil;
 import com.owl.api.IntegrationBuilder;
+import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.IntegrationMeta;
 import com.owl.api.reflect.IntegrationScanner;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -23,7 +23,7 @@ public class IntegrationCore {
         return list;
     }
 
-    public static Connection connect(IntegrationContext context, BuilderConfig config) throws Exception {
+    public static IntegrationConnection connect(IntegrationContext context, BuilderConfig config) throws Exception {
         IntegrationBuilder builder = build(context, config);
         return builder.connect();
     }

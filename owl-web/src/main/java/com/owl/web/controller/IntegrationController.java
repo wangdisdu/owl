@@ -13,7 +13,7 @@ public class IntegrationController extends V1Controller {
     @Autowired
     private IntegrationService integrationService;
 
-    @GetMapping("integration-builder")
+    @GetMapping("integration/builder/list")
     public ResponseResult builders() {
         return new ResponseResult().setResult(integrationService.builders());
     }
@@ -43,6 +43,11 @@ public class IntegrationController extends V1Controller {
     @GetMapping("integration/{name}")
     public ResponseResult get(@PathVariable("name") String name) {
         return new ResponseResult().setResult(integrationService.get(name));
+    }
+
+    @GetMapping("integration/{name}/schema")
+    public ResponseResult schema(@PathVariable("name") String name) {
+        return new ResponseResult().setResult(integrationService.schema(name));
     }
 
     @PostMapping("integration/{name}/query")

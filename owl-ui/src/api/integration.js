@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function builders() {
   return request({
-    url: '/api/v1/integration-builder',
+    url: '/api/v1/integration/builder/list',
     method: 'get'
   })
 }

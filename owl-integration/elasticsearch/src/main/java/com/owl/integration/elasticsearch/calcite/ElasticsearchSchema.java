@@ -6,10 +6,12 @@ import com.owl.integration.elasticsearch.client.IndexClient;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class ElasticsearchSchema extends AbstractSchema {
+public class ElasticsearchSchema extends AbstractSchema implements Closeable {
     private final EsClient esClient;
     private final Map<String, Table> tableMap;
 
@@ -31,5 +33,13 @@ public class ElasticsearchSchema extends AbstractSchema {
             builder.put(index, new ElasticsearchTable(indexClient));
         }
         return builder.build();
+    }
+
+    @Override
+    public void close() throws IOException {
+        for (Map.Entry<String, Table> entry : tableMap.entrySet()) {
+            ((ElasticsearchTable) entry.getValue()).close();
+        }
+        esClient.close();
     }
 }

@@ -1,7 +1,6 @@
 package com.owl.integration.kafka.calcite;
 
 import com.owl.integration.kafka.KafkaConfig;
-import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaFactory;
 import org.apache.calcite.schema.SchemaPlus;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -16,7 +15,7 @@ public class KafkaSchemaFactory implements SchemaFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSchemaFactory.class);
 
     @Override
-    public Schema create(SchemaPlus parentSchema, String name, Map<String, Object> operand) {
+    public KafkaSchema create(SchemaPlus parentSchema, String name, Map<String, Object> operand) {
         KafkaConfig config = new KafkaConfig();
         config.configure(operand);
         try {

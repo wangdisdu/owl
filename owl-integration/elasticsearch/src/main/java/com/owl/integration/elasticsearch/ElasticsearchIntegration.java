@@ -3,11 +3,14 @@ package com.owl.integration.elasticsearch;
 import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
+import com.owl.api.schema.IntegrationSchema;
+import com.owl.integration.elasticsearch.calcite.ElasticsearchSchema;
 import com.owl.integration.elasticsearch.calcite.ElasticsearchSchemaFactory;
+import com.owl.integration.elasticsearch.calcite.ElasticsearchTable;
 import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Map;
@@ -16,16 +19,22 @@ import java.util.Properties;
 @Integration(
         display = "Elasticsearch",
         description = "Elasticsearch Integration",
-        sqlPlaceholder = "SELECT * FROM `INDEX_NAME`"
+        sqlPlaceholder = "SELECT * FROM"
 )
 public class ElasticsearchIntegration implements IntegrationBuilder<ElasticsearchConfig> {
     private IntegrationContext context;
     private ElasticsearchConfig config;
+    private ElasticsearchSchema schema;
 
     @Override
     public void build(IntegrationContext context, ElasticsearchConfig config) throws Exception {
         this.context = context;
         this.config = config;
+    }
+
+    @Override
+    public IntegrationContext getContext() {
+        return context;
     }
 
     @Override
@@ -36,7 +45,7 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
     }
 
     @Override
-    public Connection connect() throws Exception {
+    public ElasticsearchConnection connect() throws Exception {
         //init calcite jdbc driver
         Class.forName("org.apache.calcite.jdbc.Driver");
         Properties info = new Properties();
@@ -47,13 +56,26 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
         CalciteConnection connection = con.unwrap(CalciteConnection.class);
         SchemaPlus rootSchema = connection.getRootSchema();
         Map<String, Object> operand = config.getParameters();
-        //operand.put("hosts", JsonUtil.encode(StrUtil.split(config.getHosts(),',')));
         ElasticsearchSchemaFactory factory = new ElasticsearchSchemaFactory();
-        Schema schema = factory.create(rootSchema, "default", operand);
+        schema = factory.create(rootSchema, "default", operand);
+        IntegrationSchema integrationSchema = new IntegrationSchema();
         for (String tableName: schema.getTableNames()) {
-            org.apache.calcite.schema.Table t = schema.getTable(tableName);
-            rootSchema.add(tableName, t);
+            ElasticsearchTable table = (ElasticsearchTable) schema.getTable(tableName);
+            rootSchema.add(tableName, table);
+            integrationSchema.addTable(table.getTableSchema());
         }
-        return con;
+
+        ElasticsearchConnection result = new ElasticsearchConnection();
+        result.setConnection(con);
+        result.setSchema(integrationSchema);
+        result.setIntegration(this);
+        return result;
+    }
+
+    @Override
+    public void close() throws IOException {
+        if(schema != null) {
+            schema.close();
+        }
     }
 }

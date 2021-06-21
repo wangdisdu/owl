@@ -7,11 +7,12 @@ import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class EsClient {
+public class EsClient implements Closeable {
     private final RestClient restClient;
     private EsVersion version;
 
@@ -61,6 +62,13 @@ public class EsClient {
             }
         } catch (IOException e) {
             throw new EsCallException("failed request " + request.getEndpoint(), e);
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        if(restClient != null) {
+            restClient.close();
         }
     }
 }

@@ -5,10 +5,12 @@ import com.owl.integration.kafka.KafkaConfig;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class KafkaSchema extends AbstractSchema {
+public class KafkaSchema extends AbstractSchema implements Closeable {
     private final List<String> topics;
     private final KafkaConfig config;
     private final Map<String, Table> tableMap;
@@ -31,5 +33,12 @@ public class KafkaSchema extends AbstractSchema {
             builder.put(topic, table);
         }
         return builder.build();
+    }
+
+    @Override
+    public void close() throws IOException {
+        for (Map.Entry<String, Table> entry : tableMap.entrySet()) {
+            ((KafkaStreamTable) entry.getValue()).close();
+        }
     }
 }

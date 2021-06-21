@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.owl.integration.elasticsearch.ElasticsearchConfig;
 import com.owl.integration.elasticsearch.client.EsClient;
-import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaFactory;
 import org.apache.calcite.schema.SchemaPlus;
 import org.apache.http.HttpHost;
@@ -28,7 +27,7 @@ public class ElasticsearchSchemaFactory implements SchemaFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchSchemaFactory.class);
 
     @Override
-    public Schema create(SchemaPlus parentSchema, String name, Map<String, Object> operand) {
+    public ElasticsearchSchema create(SchemaPlus parentSchema, String name, Map<String, Object> operand) {
         ElasticsearchConfig config = new ElasticsearchConfig();
         config.configure(operand);
         try {

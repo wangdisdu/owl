@@ -19,6 +19,8 @@
           </div>
           <div bottom clearfix>
             <el-button-group style="float: right;">
+              <el-button icon="el-icon-search" size="mini" @click="toQuery(integration.name)">
+              </el-button>
               <el-button icon="el-icon-edit" size="mini" @click="toEdit(integration.name)">
               </el-button>
               <el-popconfirm
@@ -68,6 +70,9 @@ export default {
   methods: {
     toCreate() {
       this.$router.push('/integration/create')
+    },
+    toQuery(name) {
+      this.$router.push('/integration-'+name+'/index')
     },
     toEdit(name) {
       this.$router.push('/integration/edit/'+name)

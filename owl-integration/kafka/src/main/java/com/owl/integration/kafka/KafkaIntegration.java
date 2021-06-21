@@ -3,11 +3,14 @@ package com.owl.integration.kafka;
 import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
+import com.owl.api.schema.IntegrationSchema;
+import com.owl.integration.kafka.calcite.KafkaSchema;
 import com.owl.integration.kafka.calcite.KafkaSchemaFactory;
+import com.owl.integration.kafka.calcite.KafkaStreamTable;
 import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Map;
@@ -16,16 +19,22 @@ import java.util.Properties;
 @Integration(
         display = "Kafka",
         description = "Kafka Integration",
-        sqlPlaceholder = "SELECT STREAM * FROM `TOPIC_NAME`"
+        sqlPlaceholder = "SELECT STREAM * FROM"
 )
 public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
     private IntegrationContext context;
     private KafkaConfig config;
+    private KafkaSchema schema;
 
     @Override
     public void build(IntegrationContext context, KafkaConfig config) throws Exception {
         this.context = context;
         this.config = config;
+    }
+
+    @Override
+    public IntegrationContext getContext() {
+        return context;
     }
 
     @Override
@@ -36,7 +45,7 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
     }
 
     @Override
-    public Connection connect() throws Exception {
+    public KafkaConnection connect() throws Exception {
         //init calcite jdbc driver
         Class.forName("org.apache.calcite.jdbc.Driver");
         Properties info = new Properties();
@@ -48,11 +57,24 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
         SchemaPlus rootSchema = connection.getRootSchema();
         Map<String, Object> operand = config.getParameters();
         KafkaSchemaFactory factory = new KafkaSchemaFactory();
-        Schema schema = factory.create(rootSchema, "default", operand);
+        schema = factory.create(rootSchema, "default", operand);
+        IntegrationSchema integrationSchema = new IntegrationSchema();
         for (String tableName: schema.getTableNames()) {
-            org.apache.calcite.schema.Table t = schema.getTable(tableName);
-            rootSchema.add(tableName, t);
+            KafkaStreamTable table = (KafkaStreamTable) schema.getTable(tableName);
+            rootSchema.add(tableName, table);
+            integrationSchema.addTable(table.getTableSchema());
         }
-        return con;
+        KafkaConnection result = new KafkaConnection();
+        result.setConnection(con);
+        result.setSchema(integrationSchema);
+        result.setIntegration(this);
+        return result;
+    }
+
+    @Override
+    public void close() throws IOException {
+        if(schema != null) {
+            schema.close();
+        }
     }
 }
