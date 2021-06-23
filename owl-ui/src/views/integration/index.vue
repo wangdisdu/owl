@@ -6,7 +6,6 @@
           <div slot="header" class="clearfix" >
             <span>{{integration.name}}</span>
             <el-tag type="info" style="float: right; margin: 0">
-
               <svg-icon icon-class="integration" />
               {{integration.meta.display}}
             </el-tag>

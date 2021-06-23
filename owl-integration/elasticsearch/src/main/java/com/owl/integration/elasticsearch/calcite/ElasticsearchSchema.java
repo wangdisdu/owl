@@ -1,6 +1,7 @@
 package com.owl.integration.elasticsearch.calcite;
 
 import com.google.common.collect.ImmutableMap;
+import com.owl.api.schema.IntegrationSchema;
 import com.owl.integration.elasticsearch.client.EsClient;
 import com.owl.integration.elasticsearch.client.IndexClient;
 import org.apache.calcite.schema.Table;
@@ -12,12 +13,17 @@ import java.util.List;
 import java.util.Map;
 
 public class ElasticsearchSchema extends AbstractSchema implements Closeable {
+    private final IntegrationSchema integrationSchema = new IntegrationSchema();
     private final EsClient esClient;
     private final Map<String, Table> tableMap;
 
     public ElasticsearchSchema(EsClient esClient) {
         this.esClient = esClient;
         this.tableMap = createTables();
+    }
+
+    public IntegrationSchema getIntegrationSchema() {
+        return integrationSchema;
     }
 
     @Override
@@ -27,10 +33,12 @@ public class ElasticsearchSchema extends AbstractSchema implements Closeable {
 
     private Map<String, Table> createTables() {
         List<String> indices = esClient.indices();
-        final ImmutableMap.Builder<String, Table> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<String, Table> builder = ImmutableMap.builder();
         for (String index : indices) {
-            final IndexClient indexClient = new IndexClient(esClient, index);
-            builder.put(index, new ElasticsearchTable(indexClient));
+            IndexClient indexClient = new IndexClient(esClient, index);
+            ElasticsearchTable table = new ElasticsearchTable(index, indexClient);
+            builder.put(index, table);
+            integrationSchema.addTable(table.getTableSchema());
         }
         return builder.build();
     }

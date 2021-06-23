@@ -47,6 +47,14 @@ export function get(name) {
   })
 }
 
+export function schema(name) {
+  const url = '/api/v1/integration/' + name + "/schema"
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
+
 export function query(data) {
   const url = '/api/v1/integration/' + data.name + "/query"
   return request({
@@ -63,5 +71,6 @@ export default {
   update,
   remove,
   get,
+  schema,
   query
 }

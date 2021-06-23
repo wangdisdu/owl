@@ -15,33 +15,62 @@ import org.apache.calcite.plan.RelOptTable;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
 import org.apache.calcite.schema.TranslatableTable;
 import org.apache.calcite.schema.impl.AbstractTable;
 import org.apache.calcite.sql.type.SqlTypeName;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ElasticsearchTable extends AbstractTable implements TranslatableTable, Closeable {
-    private final IndexClient indexClient;
-    private final IndexMapping indexMapping;
     private final String indexName;
-    private final TableSchema tableSchema = new TableSchema();
+    private final IndexClient indexClient;
+    private final TableSchema tableSchema;
 
-    public ElasticsearchTable(IndexClient indexClient) {
+    public ElasticsearchTable(String indexName, IndexClient indexClient) {
+        this.indexName = indexName;
         this.indexClient = indexClient;
-        this.indexMapping = indexClient.mappings();
-        this.indexName = indexClient.getIndex();
-        this.tableSchema.setName(indexName);
+        this.tableSchema = createTableSchema(indexName, indexClient.mappings());
     }
 
     public TableSchema getTableSchema() {
         return tableSchema;
+    }
+
+    private TableSchema createTableSchema(String index, IndexMapping mapping) {
+        final TableSchema tableSchema = new TableSchema();
+        tableSchema.setName(index);
+        mapping.getMapping().forEach((key, value) ->
+                tableSchema.addColumn(TableColumn.build(
+                        key,
+                        mapSqlTypeFromEsType(value)
+                ))
+        );
+        return tableSchema;
+    }
+
+    private int mapSqlTypeFromEsType(String type) {
+        switch (type) {
+            case "string": // for ES2
+            case "text":
+            case "keyword":
+            case "date":
+                return Types.VARCHAR;
+            case "long":
+            case "integer":
+            case "short":
+            case "byte":
+            case "float":
+            case "double":
+                return Types.DOUBLE;
+            default:
+                return Types.VARCHAR;
+        }
     }
 
     @Override
@@ -52,19 +81,13 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
 
     @Override
     public RelDataType getRowType(RelDataTypeFactory relDataTypeFactory) {
-        RelDataTypeFactory.Builder builder = relDataTypeFactory.builder();
-        for (Map.Entry<String, String> entry : indexMapping.getMapping().entrySet()) {
-            SqlTypeName sqlTypeName = mapSqlTypeFromEsType(entry.getValue());
+        final RelDataTypeFactory.Builder builder = relDataTypeFactory.builder();
+        for (TableColumn column : tableSchema.getColumns()) {
+            SqlTypeName sqlTypeName = SqlTypeName.getNameForJdbcType(column.getJdbcType().TYPE_CODE);
             RelDataType relDataType = relDataTypeFactory.createSqlType(sqlTypeName);
-            builder.add(entry.getKey(), relDataType).nullable(true);
+            builder.add(column.getName(), relDataType).nullable(true);
         }
-        RelDataType rowType = builder.build();
-        for (RelDataTypeField field : rowType.getFieldList()) {
-            String name = field.getName();
-            int jdbcType = field.getType().getSqlTypeName().getJdbcOrdinal();
-            tableSchema.addColumn(TableColumn.build(name, jdbcType));
-        }
-        return rowType;
+        return builder.build();
     }
 
     public List<Object[]> search(ElasticsearchRelNode.Implementor implementor) {
@@ -116,24 +139,6 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
     @Override
     public String toString() {
         return "ElasticsearchTable{" + indexName + "}";
-    }
-
-    private static SqlTypeName mapSqlTypeFromEsType(String type) {
-        switch (type) {
-            case "string": // for ES2
-            case "text":
-            case "keyword":
-            case "date":
-                return SqlTypeName.VARCHAR;
-            case "long":
-            case "integer":
-            case "short":
-            case "byte":
-            case "float":
-            case "double":
-                return SqlTypeName.DOUBLE;
-        }
-        return SqlTypeName.VARCHAR;
     }
 
     @Override

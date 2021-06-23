@@ -3,7 +3,6 @@ package com.owl.integration.elasticsearch;
 import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.api.schema.IntegrationSchema;
 import com.owl.integration.elasticsearch.calcite.ElasticsearchSchema;
 import com.owl.integration.elasticsearch.calcite.ElasticsearchSchemaFactory;
 import com.owl.integration.elasticsearch.calcite.ElasticsearchTable;
@@ -58,16 +57,14 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
         Map<String, Object> operand = config.getParameters();
         ElasticsearchSchemaFactory factory = new ElasticsearchSchemaFactory();
         schema = factory.create(rootSchema, "default", operand);
-        IntegrationSchema integrationSchema = new IntegrationSchema();
         for (String tableName: schema.getTableNames()) {
             ElasticsearchTable table = (ElasticsearchTable) schema.getTable(tableName);
             rootSchema.add(tableName, table);
-            integrationSchema.addTable(table.getTableSchema());
         }
 
         ElasticsearchConnection result = new ElasticsearchConnection();
         result.setConnection(con);
-        result.setSchema(integrationSchema);
+        result.setSchema(schema.getIntegrationSchema());
         result.setIntegration(this);
         return result;
     }

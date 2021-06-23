@@ -1,8 +1,6 @@
 package com.owl.integration.kafka.calcite;
 
 import com.google.common.collect.ImmutableList;
-import com.owl.api.schema.ColumnType;
-import com.owl.api.schema.JdbcType;
 import com.owl.api.schema.TableColumn;
 import com.owl.api.schema.TableSchema;
 import com.owl.integration.kafka.KafkaConfig;
@@ -12,7 +10,6 @@ import org.apache.calcite.linq4j.Enumerable;
 import org.apache.calcite.rel.RelCollations;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
 import org.apache.calcite.schema.*;
 import org.apache.calcite.sql.SqlCall;
 import org.apache.calcite.sql.SqlNode;
@@ -20,6 +17,7 @@ import org.apache.calcite.sql.type.SqlTypeName;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Types;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -30,16 +28,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class KafkaStreamTable implements ScannableTable, StreamableTable, Closeable {
     private final String topic;
+    private final TableSchema tableSchema;
     private final KafkaConfig config;
-    private final TableSchema tableSchema = new TableSchema();
 
     public KafkaStreamTable(String topic, KafkaConfig config) {
         this.topic = topic;
         this.config = config;
-        this.tableSchema.setName(topic);
+        this.tableSchema = createTableSchema(topic);
     }
 
     public TableSchema getTableSchema() {
+        return tableSchema;
+    }
+
+    private TableSchema createTableSchema(String topic) {
+        final TableSchema tableSchema = new TableSchema();
+        tableSchema.setName(topic);
+        tableSchema.addColumn(TableColumn.build("PARTITION", Types.INTEGER));
+        tableSchema.addColumn(TableColumn.build("TIMESTAMP", Types.BIGINT));
+        tableSchema.addColumn(TableColumn.build("OFFSET", Types.BIGINT));
+        tableSchema.addColumn(TableColumn.build("KEY", Types.VARCHAR));
+        tableSchema.addColumn(TableColumn.build("VALUE", Types.VARCHAR));
         return tableSchema;
     }
 
@@ -50,20 +59,14 @@ public class KafkaStreamTable implements ScannableTable, StreamableTable, Closea
     }
 
     @Override
-    public RelDataType getRowType(final RelDataTypeFactory typeFactory) {
-        final RelDataTypeFactory.Builder builder = typeFactory.builder();
-        builder.add("PARTITION", typeFactory.createSqlType(SqlTypeName.INTEGER)).nullable(true);
-        builder.add("TIMESTAMP", typeFactory.createSqlType(SqlTypeName.BIGINT)).nullable(true);
-        builder.add("OFFSET", typeFactory.createSqlType(SqlTypeName.BIGINT)).nullable(true);
-        builder.add("KEY", typeFactory.createSqlType(SqlTypeName.VARCHAR)).nullable(true);
-        builder.add("VALUE", typeFactory.createSqlType(SqlTypeName.VARCHAR)).nullable(true);
-        RelDataType rowType = builder.build();
-        for (RelDataTypeField field : rowType.getFieldList()) {
-            String name = field.getName();
-            int jdbcType = field.getType().getSqlTypeName().getJdbcOrdinal();
-            tableSchema.addColumn(TableColumn.build(name, jdbcType));
+    public RelDataType getRowType(final RelDataTypeFactory relDataTypeFactory) {
+        final RelDataTypeFactory.Builder builder = relDataTypeFactory.builder();
+        for (TableColumn column : tableSchema.getColumns()) {
+            SqlTypeName sqlTypeName = SqlTypeName.getNameForJdbcType(column.getJdbcType().TYPE_CODE);
+            RelDataType relDataType = relDataTypeFactory.createSqlType(sqlTypeName);
+            builder.add(column.getName(), relDataType).nullable(true);
         }
-        return rowType;
+        return builder.build();
     }
 
     @Override

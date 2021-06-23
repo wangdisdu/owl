@@ -3,7 +3,6 @@ package com.owl.integration.kafka;
 import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.api.schema.IntegrationSchema;
 import com.owl.integration.kafka.calcite.KafkaSchema;
 import com.owl.integration.kafka.calcite.KafkaSchemaFactory;
 import com.owl.integration.kafka.calcite.KafkaStreamTable;
@@ -58,15 +57,13 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
         Map<String, Object> operand = config.getParameters();
         KafkaSchemaFactory factory = new KafkaSchemaFactory();
         schema = factory.create(rootSchema, "default", operand);
-        IntegrationSchema integrationSchema = new IntegrationSchema();
         for (String tableName: schema.getTableNames()) {
             KafkaStreamTable table = (KafkaStreamTable) schema.getTable(tableName);
             rootSchema.add(tableName, table);
-            integrationSchema.addTable(table.getTableSchema());
         }
         KafkaConnection result = new KafkaConnection();
         result.setConnection(con);
-        result.setSchema(integrationSchema);
+        result.setSchema(schema.getIntegrationSchema());
         result.setIntegration(this);
         return result;
     }
