@@ -76,7 +76,7 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
     @Override
     public RelNode toRel(RelOptTable.ToRelContext context, RelOptTable relOptTable) {
         final RelOptCluster cluster = context.getCluster();
-        return new ElasticsearchTableScan(cluster, relOptTable, this);
+        return new ElasticsearchTableScan(cluster, relOptTable, this, null);
     }
 
     @Override

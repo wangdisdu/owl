@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.owl.integration.elasticsearch.Constants;
 import com.owl.integration.elasticsearch.client.request.aggregation.*;
 import org.apache.calcite.plan.RelOptCluster;
+import org.apache.calcite.plan.RelOptCost;
+import org.apache.calcite.plan.RelOptPlanner;
 import org.apache.calcite.plan.RelTraitSet;
 import org.apache.calcite.rel.InvalidRelException;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.core.Aggregate;
 import org.apache.calcite.rel.core.AggregateCall;
+import org.apache.calcite.rel.metadata.RelMetadataQuery;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.util.ImmutableBitSet;
@@ -84,6 +87,11 @@ public class ElasticsearchAggregate extends Aggregate implements ElasticsearchRe
         } catch (InvalidRelException e) {
             throw new AssertionError(e);
         }
+    }
+
+    @Override
+    public RelOptCost computeSelfCost(RelOptPlanner planner, RelMetadataQuery mq) {
+        return super.computeSelfCost(planner, mq).multiplyBy(0.1);
     }
 
     @Override

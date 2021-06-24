@@ -4,9 +4,12 @@ import com.owl.integration.elasticsearch.calcite.analyzer.PredicateAnalyzer;
 import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.Query;
 import org.apache.calcite.plan.RelOptCluster;
+import org.apache.calcite.plan.RelOptCost;
+import org.apache.calcite.plan.RelOptPlanner;
 import org.apache.calcite.plan.RelTraitSet;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.core.Filter;
+import org.apache.calcite.rel.metadata.RelMetadataQuery;
 import org.apache.calcite.rex.RexNode;
 
 import java.util.List;
@@ -29,6 +32,11 @@ public class ElasticsearchFilter extends Filter implements ElasticsearchRelNode 
     @Override
     public Filter copy(RelTraitSet relTraitSet, RelNode input, RexNode condition) {
         return new ElasticsearchFilter(getCluster(), relTraitSet, input, condition);
+    }
+
+    @Override
+    public RelOptCost computeSelfCost(RelOptPlanner planner, RelMetadataQuery mq) {
+        return super.computeSelfCost(planner, mq).multiplyBy(0.1);
     }
 
     @Override

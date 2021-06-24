@@ -3,11 +3,14 @@ package com.owl.integration.elasticsearch.calcite;
 import com.owl.integration.elasticsearch.client.request.sorter.FieldSorter;
 import com.owl.integration.elasticsearch.client.request.sorter.Sorter;
 import org.apache.calcite.plan.RelOptCluster;
+import org.apache.calcite.plan.RelOptCost;
+import org.apache.calcite.plan.RelOptPlanner;
 import org.apache.calcite.plan.RelTraitSet;
 import org.apache.calcite.rel.RelCollation;
 import org.apache.calcite.rel.RelFieldCollation;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.core.Sort;
+import org.apache.calcite.rel.metadata.RelMetadataQuery;
 import org.apache.calcite.rel.type.RelDataTypeField;
 import org.apache.calcite.rex.RexLiteral;
 import org.apache.calcite.rex.RexNode;
@@ -30,6 +33,11 @@ public class ElasticsearchSort extends Sort implements ElasticsearchRelNode {
     public Sort copy(RelTraitSet traitSet, RelNode relNode, RelCollation relCollation,
                                RexNode offset, RexNode fetch) {
         return new ElasticsearchSort(getCluster(), traitSet, relNode, collation, offset, fetch);
+    }
+
+    @Override
+    public RelOptCost computeSelfCost(RelOptPlanner planner, RelMetadataQuery mq) {
+        return super.computeSelfCost(planner, mq).multiplyBy(0.05);
     }
 
     @Override

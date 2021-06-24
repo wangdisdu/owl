@@ -11,12 +11,10 @@ import org.apache.calcite.rel.convert.ConverterRule;
 import org.apache.calcite.rel.core.Sort;
 import org.apache.calcite.rel.logical.LogicalAggregate;
 import org.apache.calcite.rel.logical.LogicalFilter;
-import org.apache.calcite.rel.logical.LogicalProject;
 
 public class ElasticsearchRules {
     public static final RelOptRule[] RULES = {
             ElasticsearchEnumerableRule.INSTANCE,
-            ElasticsearchProjectRule.INSTANCE,
             ElasticsearchSortRule.INSTANCE,
             ElasticsearchFilterRule.INSTANCE,
             ElasticsearchAggregateRule.INSTANCE
@@ -112,30 +110,6 @@ public class ElasticsearchRules {
             } catch (InvalidRelException e) {
                 return null;
             }
-        }
-    }
-
-    /**
-     * Rule to convert a {@link org.apache.calcite.rel.logical.LogicalProject}
-     * to an {@link ElasticsearchProject}.
-     */
-    private static class ElasticsearchProjectRule extends ElasticsearchConverterRule {
-        private static final ElasticsearchProjectRule INSTANCE = Config.INSTANCE
-                .withConversion(LogicalProject.class, Convention.NONE,
-                        ElasticsearchRelNode.CONVENTION, "ElasticsearchProjectRule")
-                .withRuleFactory(ElasticsearchProjectRule::new)
-                .toRule(ElasticsearchProjectRule.class);
-
-        protected ElasticsearchProjectRule(Config config) {
-            super(config);
-        }
-
-        @Override
-        public RelNode convert(RelNode relNode) {
-            final LogicalProject project = (LogicalProject) relNode;
-            final RelTraitSet traitSet = project.getTraitSet().replace(out);
-            return new ElasticsearchProject(project.getCluster(), traitSet,
-                    convert(project.getInput(), out), project.getProjects(), project.getRowType());
         }
     }
 
