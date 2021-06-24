@@ -18,7 +18,8 @@ import java.util.Properties;
 @Integration(
         display = "Elasticsearch",
         description = "Elasticsearch Integration",
-        sqlPlaceholder = "SELECT * FROM"
+        sqlPlaceholder = "SELECT * FROM",
+        icon = "Elasticsearch.svg"
 )
 public class ElasticsearchIntegration implements IntegrationBuilder<ElasticsearchConfig> {
     private IntegrationContext context;

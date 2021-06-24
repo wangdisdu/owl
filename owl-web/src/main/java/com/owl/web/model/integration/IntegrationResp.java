@@ -1,5 +1,6 @@
 package com.owl.web.model.integration;
 
+import cn.hutool.core.util.StrUtil;
 import com.owl.common.JsonUtil;
 import com.owl.web.dao.entity.TbIntegration;
 import com.owl.web.model.BaseModel;
@@ -25,6 +26,11 @@ public class IntegrationResp implements BaseModel<TbIntegration> {
         copyFrom(entity);
         setConfig(JsonUtil.decode2MapUnSafe(entity.getConfig()));
         setMeta(JsonUtil.decode2MapUnSafe(entity.getMeta()));
+        if(StrUtil.isNotBlank((String) getMeta().get("icon"))) {
+            getMeta().put("iconUrl", "/api/v1/integration/builder/" + builder + "/icon");
+        } else {
+            getMeta().put("iconUrl", "");
+        }
         return this;
     }
 }

@@ -5,6 +5,8 @@ import com.owl.web.model.integration.IntegrationQuery;
 import com.owl.web.model.integration.IntegrationReq;
 import com.owl.web.service.IntegrationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +18,18 @@ public class IntegrationController extends V1Controller {
     @GetMapping("integration/builder/list")
     public ResponseResult builders() {
         return new ResponseResult().setResult(integrationService.builders());
+    }
+
+    @GetMapping("integration/builder/{name}/icon")
+    public ResponseEntity<byte[]> icon(@PathVariable("name") String name) {
+        byte[] bytes = integrationService.icon(name);
+        if(bytes == null || bytes.length == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity
+                .ok()
+                .header("Content-Type","image/svg+xml; charset=UTF-8")
+                .body(bytes);
     }
 
     @GetMapping("integration")

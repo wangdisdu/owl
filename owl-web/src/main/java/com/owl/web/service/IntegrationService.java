@@ -9,6 +9,7 @@ import com.owl.web.dao.service.TbIntegrationService;
 import com.owl.web.model.integration.IntegrationQuery;
 import com.owl.web.model.integration.IntegrationReq;
 import com.owl.web.model.integration.IntegrationResp;
+import com.owl.web.provider.IntegrationBuilderService;
 import com.owl.web.provider.IntegrationPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,15 @@ public class IntegrationService {
     private TbIntegrationService tbIntegrationService;
     @Autowired
     private IntegrationPoolService integrationPoolService;
+    @Autowired
+    private IntegrationBuilderService integrationBuilderService;
 
     public List<IntegrationMeta> builders() {
-        return integrationPoolService.scan();
+        return integrationBuilderService.scan();
+    }
+
+    public byte[] icon(String builder) {
+        return integrationBuilderService.icon(builder);
     }
 
     public List<IntegrationResp> list() {

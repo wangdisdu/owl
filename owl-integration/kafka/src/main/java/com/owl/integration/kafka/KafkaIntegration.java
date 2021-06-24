@@ -18,7 +18,8 @@ import java.util.Properties;
 @Integration(
         display = "Kafka",
         description = "Kafka Integration",
-        sqlPlaceholder = "SELECT STREAM * FROM"
+        sqlPlaceholder = "SELECT STREAM * FROM",
+        icon = "Kafka.svg"
 )
 public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
     private IntegrationContext context;

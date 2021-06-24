@@ -13,8 +13,7 @@ public class KafkaConfig extends SmartConfig implements IntegrationConfig {
     private String bootstrapServers;
 
     @Parameter(
-            display = "Consumer配置",
-            candidates = {"bytes", "string", "json"},
+            display = "高级配置",
             required = false
     )
     private KeyValue consumerProperties;

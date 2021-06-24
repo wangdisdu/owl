@@ -20,7 +20,8 @@ const actions = {
       
       let menu_routes = []
       for (var i = 0; i < integrations.length; i++) {
-        let name = integrations[i].name
+        let integration = integrations[i]
+        let name = integration.name
         let id = 'integration-' + name
         let path = "/" + id
         menu_routes.push({
@@ -31,7 +32,7 @@ const actions = {
               path: 'index',
               name: id,
               component: () => import('@/views/query/index'),
-              meta: { title: name, icon: 'integration' }
+              meta: { title: name, icon: 'integration', iconUrl: integration.meta.iconUrl }
             }
           ]
         })
