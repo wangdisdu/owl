@@ -10,7 +10,10 @@ import org.elasticsearch.client.RestClient;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class EsClient implements Closeable {
     private final RestClient restClient;
@@ -41,7 +44,16 @@ public class EsClient implements Closeable {
     public List<String> indices() {
         Request request = new Request("GET", "/_alias");
         JsonNode response = performRequest(request);
-        return CollUtil.newArrayList(response.fieldNames());
+        Iterator<Map.Entry<String, JsonNode>> iterator = response.fields();
+        HashSet<String> indices = new HashSet<>();
+        while (iterator.hasNext()) {
+            Map.Entry<String, JsonNode> entry = iterator.next();
+            String index = entry.getKey();
+            indices.add(index);
+            Iterator<String> aliases = entry.getValue().get("aliases").fieldNames();
+            indices.addAll(CollUtil.newArrayList(aliases));
+        }
+        return CollUtil.newArrayList(indices);
     }
 
     public IndexMapping mappings(String index) {
