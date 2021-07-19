@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableExceptionHandler
 public class OwlService {
     public static void main(String[] args) {
+        OwlApplication.lockPid();
         SpringApplication.run(OwlService.class, args);
     }
 }
