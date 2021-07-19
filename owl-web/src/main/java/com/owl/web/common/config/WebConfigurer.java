@@ -3,6 +3,7 @@ package com.owl.web.common.config;
 import com.owl.web.common.aop.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.*;
@@ -34,17 +35,9 @@ public class WebConfigurer implements WebMvcConfigurer {
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/")
-                .setViewName("forward:" + owlConfig.getWebsite().getIndex());
-    }
-
-    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                //.addResourceLocations(
-                //        new File(owlConfig.getWebsite().getRoot()).toURI().toString()
-                //)
+                .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
                     @Override
@@ -53,7 +46,7 @@ public class WebConfigurer implements WebMvcConfigurer {
                         Resource requestedResource = location.createRelative(resourcePath);
                         return resourcePath.startsWith("api/") || (requestedResource.exists() && requestedResource.isReadable()) ?
                                 requestedResource :
-                                new FileSystemResource(owlConfig.getWebsite().getIndex());
+                                new ClassPathResource("/static/index.html");
                     }
                 });
     }

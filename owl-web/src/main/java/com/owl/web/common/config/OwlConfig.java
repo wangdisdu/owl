@@ -11,5 +11,4 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "owl")
 public class OwlConfig {
     private String home;
-    private WebsiteConfig website;
 }

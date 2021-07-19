@@ -2,13 +2,7 @@ server:
   port: 8808
 owl:
   home: ${OWL_HOME:owl}
-  website:
-    root: ${owl.home}/www
-    index: index.html
 spring:
-  resources:
-    static-locations:
-      - file:${owl.website.root}
   datasource:
     # JDBC连接串
     url: jdbc:sqlite:${owl.home}/db/owl_db.sqlite
