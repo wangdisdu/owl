@@ -17,7 +17,7 @@
               <span class="card-item-name">
                 {{ parameter.display }}:
               </span>
-              <span class="card-item-value">
+              <span v-if="!parameter.password" class="card-item-value">
                 {{ integration.config[parameter.name] }}
               </span>
             </div>
