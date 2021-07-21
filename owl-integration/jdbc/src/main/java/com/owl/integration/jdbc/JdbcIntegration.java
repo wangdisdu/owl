@@ -1,12 +1,13 @@
-package com.owl.integration.kafka;
+package com.owl.integration.jdbc;
 
 import com.owl.api.IntegrationBuilder;
+import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.integration.kafka.calcite.KafkaSchema;
-import com.owl.integration.kafka.calcite.KafkaSchemaFactory;
-import com.owl.integration.kafka.calcite.KafkaStreamTable;
+import org.apache.calcite.adapter.jdbc.JdbcSchema;
+import org.apache.calcite.adapter.jdbc.JdbcTable;
 import org.apache.calcite.jdbc.CalciteConnection;
+import org.apache.calcite.schema.Schema;
 import org.apache.calcite.schema.SchemaPlus;
 
 import java.io.IOException;
@@ -16,20 +17,27 @@ import java.util.Map;
 import java.util.Properties;
 
 @Integration(
-        display = "Kafka",
-        description = "Kafka Integration",
-        sqlPlaceholder = "SELECT STREAM * FROM",
-        icon = "Kafka.svg"
+        display = "Jdbc",
+        description = "Jdbc Integration",
+        sqlPlaceholder = "SELECT * FROM",
+        icon = "Jdbc.svg"
 )
-public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
+public class JdbcIntegration implements IntegrationBuilder<JdbcConfig>  {
     private IntegrationContext context;
-    private KafkaConfig config;
-    private KafkaSchema schema;
+    private JdbcConfig config;
+    private Schema schema;
 
     @Override
-    public void build(IntegrationContext context, KafkaConfig config) throws Exception {
+    public void build(IntegrationContext context, JdbcConfig config) throws Exception {
         this.context = context;
         this.config = config;
+    }
+
+    @Override
+    public JdbcConfig configure(Map<String, Object> map) {
+        JdbcConfig config = new JdbcConfig();
+        config.configure(map);
+        return config;
     }
 
     @Override
@@ -38,36 +46,33 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
     }
 
     @Override
-    public KafkaConfig configure(Map<String, Object> map) {
-        KafkaConfig config = new KafkaConfig();
-        config.configure(map);
-        return config;
-    }
+    public IntegrationConnection connect() throws Exception {
 
-    @Override
-    public KafkaConnection connect() throws Exception {
-        //init calcite jdbc driver
-        Class.forName("org.apache.calcite.jdbc.Driver");
         Properties info = new Properties();
         // https://calcite.apache.org/docs/adapter.html#jdbc-connect-string-parameters
         info.setProperty("lex", "MYSQL");
         info.setProperty("FUN", "MYSQL");
+        if(config.getJdbcProperties() != null && !config.getJdbcProperties().isEmpty()) {
+            info.putAll(config.getJdbcProperties());
+        }
         Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:calcite:", info);
             CalciteConnection connection = con.unwrap(CalciteConnection.class);
             SchemaPlus rootSchema = connection.getRootSchema();
             Map<String, Object> operand = config.getParameters();
-            KafkaSchemaFactory factory = new KafkaSchemaFactory();
+            JdbcSchema.Factory factory = JdbcSchema.Factory.INSTANCE;
             schema = factory.create(rootSchema, "default", operand);
             rootSchema.add("default", schema);
-            for (String tableName : schema.getTableNames()) {
-                KafkaStreamTable table = (KafkaStreamTable) schema.getTable(tableName);
+            JdbcSchemaReader reader = new JdbcSchemaReader(connection);
+            for (String tableName: schema.getTableNames()) {
+                JdbcTable table = (JdbcTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
+                reader.readSchema(table);
             }
-            KafkaConnection result = new KafkaConnection();
+            JdbcConnection result = new JdbcConnection();
             result.setConnection(con);
-            result.setSchema(schema.getIntegrationSchema());
+            result.setSchema(reader.getSchema());
             result.setIntegration(this);
             return result;
         } catch (Exception ex) {
@@ -80,8 +85,5 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
 
     @Override
     public void close() throws IOException {
-        if(schema != null) {
-            schema.close();
-        }
     }
 }

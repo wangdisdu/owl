@@ -26,6 +26,12 @@
 
         <dependency>
             <groupId>com.owl</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.owl</groupId>
             <artifactId>kafka</artifactId>
             <version>${project.version}</version>
         </dependency>

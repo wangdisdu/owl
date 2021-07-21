@@ -53,6 +53,7 @@ public class IntegrationPoolService {
             try {
                 handler.handle(connection);
             } catch (Exception e) {
+                logger.error("query", e);
                 throw new BizException(ResponseCode.FAILED, e);
             }
         }

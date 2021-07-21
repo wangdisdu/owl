@@ -40,6 +40,9 @@ public class ParamValueConverter {
     }
 
     public Object convert(Object dataValue) {
+        if(dataValue == null) {
+            return null;
+        }
         try {
             return converter.convert(dataValue);
         } catch (Exception e) {

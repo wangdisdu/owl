@@ -52,22 +52,31 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
         // https://calcite.apache.org/docs/adapter.html#jdbc-connect-string-parameters
         info.setProperty("lex", "MYSQL");
         info.setProperty("FUN", "MYSQL");
-        Connection con = DriverManager.getConnection("jdbc:calcite:", info);
-        CalciteConnection connection = con.unwrap(CalciteConnection.class);
-        SchemaPlus rootSchema = connection.getRootSchema();
-        Map<String, Object> operand = config.getParameters();
-        ElasticsearchSchemaFactory factory = new ElasticsearchSchemaFactory();
-        schema = factory.create(rootSchema, "default", operand);
-        for (String tableName: schema.getTableNames()) {
-            ElasticsearchTable table = (ElasticsearchTable) schema.getTable(tableName);
-            rootSchema.add(tableName, table);
-        }
+        Connection con = null;
+        try {
+            con = DriverManager.getConnection("jdbc:calcite:", info);
+            CalciteConnection connection = con.unwrap(CalciteConnection.class);
+            SchemaPlus rootSchema = connection.getRootSchema();
+            Map<String, Object> operand = config.getParameters();
+            ElasticsearchSchemaFactory factory = new ElasticsearchSchemaFactory();
+            schema = factory.create(rootSchema, "default", operand);
+            rootSchema.add("default", schema);
+            for (String tableName : schema.getTableNames()) {
+                ElasticsearchTable table = (ElasticsearchTable) schema.getTable(tableName);
+                rootSchema.add(tableName, table);
+            }
 
-        ElasticsearchConnection result = new ElasticsearchConnection();
-        result.setConnection(con);
-        result.setSchema(schema.getIntegrationSchema());
-        result.setIntegration(this);
-        return result;
+            ElasticsearchConnection result = new ElasticsearchConnection();
+            result.setConnection(con);
+            result.setSchema(schema.getIntegrationSchema());
+            result.setIntegration(this);
+            return result;
+        } catch (Exception ex) {
+            if(con != null) {
+                try { con.close(); } catch (Exception ignore) {}
+            }
+            throw ex;
+        }
     }
 
     @Override
