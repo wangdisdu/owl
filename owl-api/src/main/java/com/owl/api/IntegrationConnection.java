@@ -7,6 +7,8 @@ import java.sql.Connection;
 
 public interface IntegrationConnection extends Closeable {
     Connection getConnection();
+
     IntegrationSchema getSchema();
+
     IntegrationBuilder getIntegration();
 }

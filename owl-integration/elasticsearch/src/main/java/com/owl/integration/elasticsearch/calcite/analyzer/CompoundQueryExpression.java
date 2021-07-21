@@ -1,8 +1,8 @@
 package com.owl.integration.elasticsearch.calcite.analyzer;
 
-import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.BoolQuery;
 import com.owl.integration.elasticsearch.client.request.query.Query;
+import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 
 /**
  * Builds conjunctions / disjunctions based on existing expressions.
@@ -123,13 +123,13 @@ public class CompoundQueryExpression extends QueryExpression {
 
     @Override
     public QueryExpression queryString(String query) {
-        throw new PredicateAnalyzerException("QueryString " +
-                "cannot be applied to a compound expression");
+        throw new PredicateAnalyzerException("QueryString "
+                + "cannot be applied to a compound expression");
     }
 
     @Override
     public QueryExpression isTrue() {
-        throw new PredicateAnalyzerException("isTrue " +
-                "cannot be applied to a compound expression");
+        throw new PredicateAnalyzerException("isTrue "
+                + "cannot be applied to a compound expression");
     }
 }

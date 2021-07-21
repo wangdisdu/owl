@@ -24,7 +24,7 @@ public class IntegrationScanner {
         IntegrationMeta meta = new IntegrationMeta();
         meta.setBuilder(clazz.getCanonicalName());
         meta.setDisplay(clazz.getSimpleName());
-        if(annotation != null) {
+        if (annotation != null) {
             meta.setDisplay(annotation.display());
             meta.setDescription(annotation.description());
             meta.setIcon(annotation.icon());

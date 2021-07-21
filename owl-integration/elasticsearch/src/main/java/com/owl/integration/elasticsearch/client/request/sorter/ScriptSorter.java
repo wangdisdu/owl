@@ -68,7 +68,9 @@ public class ScriptSorter extends Sorter {
         opts.put("script", this.script.serialize());
         opts.put("type", this.type);
         opts.put("order", this.ascending ? "asc" : "desc");
-        if(this.sortMode != null) opts.put("mode", this.sortMode);
+        if (this.sortMode != null) {
+            opts.put("mode", this.sortMode);
+        }
         Map<String, Object> source = new LinkedHashMap<>();
         source.put("_script", opts);
         return source;

@@ -154,17 +154,39 @@ public class MatchQuery extends Query {
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("query", this.query);
-        if(this.operator != null)  params.put("operator", this.operator);
-        if(this.analyzer != null)  params.put("analyzer", this.analyzer);
-        if(this.minimumShouldMatch != null)  params.put("minimum_should_match", this.minimumShouldMatch);
-        if(this.lenient != null)  params.put("lenient", this.lenient);
-        if(this.fuzziness != null)  params.put("fuzziness", this.fuzziness);
-        if(this.prefixLength != null)  params.put("prefix_length", this.prefixLength);
-        if(this.maxExpansions != null)  params.put("max_expansions", this.maxExpansions);
-        if(this.zeroTermsQuery != null)  params.put("zero_terms_query", this.zeroTermsQuery);
-        if(this.cutoffFrequency != null)  params.put("cutoff_frequency", this.cutoffFrequency);
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.operator != null) {
+            params.put("operator", this.operator);
+        }
+        if (this.analyzer != null) {
+            params.put("analyzer", this.analyzer);
+        }
+        if (this.minimumShouldMatch != null) {
+            params.put("minimum_should_match", this.minimumShouldMatch);
+        }
+        if (this.lenient != null) {
+            params.put("lenient", this.lenient);
+        }
+        if (this.fuzziness != null) {
+            params.put("fuzziness", this.fuzziness);
+        }
+        if (this.prefixLength != null) {
+            params.put("prefix_length", this.prefixLength);
+        }
+        if (this.maxExpansions != null) {
+            params.put("max_expansions", this.maxExpansions);
+        }
+        if (this.zeroTermsQuery != null) {
+            params.put("zero_terms_query", this.zeroTermsQuery);
+        }
+        if (this.cutoffFrequency != null) {
+            params.put("cutoff_frequency", this.cutoffFrequency);
+        }
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
 
         Map<String, Object> match = new LinkedHashMap<>();
         match.put(this.field, params);

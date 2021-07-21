@@ -79,7 +79,7 @@ public class EsClient implements Closeable {
 
     @Override
     public void close() throws IOException {
-        if(restClient != null) {
+        if (restClient != null) {
             restClient.close();
         }
     }

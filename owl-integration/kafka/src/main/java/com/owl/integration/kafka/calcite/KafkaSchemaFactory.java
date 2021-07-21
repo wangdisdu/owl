@@ -9,7 +9,11 @@ import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class KafkaSchemaFactory implements SchemaFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSchemaFactory.class);
@@ -29,7 +33,7 @@ public class KafkaSchemaFactory implements SchemaFactory {
     }
 
     private List<String> listTopics(Properties props) throws Exception {
-        try(AdminClient adminClient = KafkaAdminClient.create(props)) {
+        try (AdminClient adminClient = KafkaAdminClient.create(props)) {
             ListTopicsResult result = adminClient.listTopics();
             Set<String> topics = result.names().get();
             return new ArrayList<>(topics);

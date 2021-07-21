@@ -15,5 +15,6 @@ public abstract class BucketResponse extends AggregationResponse {
     }
 
     public abstract Object getKey();
+
     public abstract String getKeyAsString();
 }

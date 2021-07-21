@@ -27,7 +27,7 @@ public class ContextHolder implements ApplicationContextAware {
 
     public static TbUser loginUser() {
         RequestContext ctx = requestContext();
-        if(ctx == null) {
+        if (ctx == null) {
             return null;
         }
         return ctx.getLogin();
@@ -35,7 +35,7 @@ public class ContextHolder implements ApplicationContextAware {
 
     public static String loginAccount() {
         TbUser user = loginUser();
-        if(user == null) {
+        if (user == null) {
             return null;
         }
         return user.getAccount();

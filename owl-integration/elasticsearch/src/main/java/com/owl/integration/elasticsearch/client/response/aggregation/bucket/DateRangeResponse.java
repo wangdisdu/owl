@@ -47,22 +47,22 @@ public class DateRangeResponse extends BucketResponse {
 
     @Override
     public DateRangeResponse deserialize(JsonNode json) throws IOException {
-        if(json.has(FROM)) {
+        if (json.has(FROM)) {
             this.from = json.get(FROM).asDouble();
         }
-        if(json.has(FROM_AS_STRING)) {
+        if (json.has(FROM_AS_STRING)) {
             this.fromAsString = json.get(FROM_AS_STRING).asText();
         }
-        if(json.has(TO)) {
+        if (json.has(TO)) {
             this.to = json.get(TO).asDouble();
         }
-        if(json.has(TO_AS_STRING)) {
+        if (json.has(TO_AS_STRING)) {
             this.toAsString = json.get(TO_AS_STRING).asText();
         }
-        if(json.has(DOC_COUNT)) {
+        if (json.has(DOC_COUNT)) {
             this.docCount = json.get(DOC_COUNT).asLong();
         }
-        if(json.has(AggregationResponse.META)) {
+        if (json.has(AggregationResponse.META)) {
             this.meta = JsonUtil.decode2Map(json.get(AggregationResponse.META));
         }
         return this;

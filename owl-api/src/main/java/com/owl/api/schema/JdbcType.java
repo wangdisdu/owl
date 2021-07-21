@@ -47,17 +47,17 @@ public enum JdbcType {
     TIME_WITH_TIMEZONE(Types.TIME_WITH_TIMEZONE), // JDBC 4.2 JDK8
     TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8
 
-    public final int TYPE_CODE;
+    public final int code;
     private static Map<Integer,JdbcType> codeLookup = new HashMap<>();
 
     static {
         for (JdbcType type : JdbcType.values()) {
-            codeLookup.put(type.TYPE_CODE, type);
+            codeLookup.put(type.code, type);
         }
     }
 
     JdbcType(int code) {
-        this.TYPE_CODE = code;
+        this.code = code;
     }
 
     public static JdbcType fromJdbc(int code)  {

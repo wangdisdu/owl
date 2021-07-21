@@ -16,7 +16,7 @@ import java.util.Map;
 public class ParameterConfigurer {
 
     public static void config(Object configBean, Map<String, Object> configMap) {
-        if(configMap == null) {
+        if (configMap == null) {
             configMap = new HashMap<>();
         }
         configParameters(configBean, configMap);
@@ -27,12 +27,12 @@ public class ParameterConfigurer {
         Field[] fields = ReflectUtil.getFields(configClass);
         for (Field field : fields) {
             Parameter annotation = field.getAnnotation(Parameter.class);
-            if(annotation == null) {
+            if (annotation == null) {
                 continue;
             }
             ParameterMeta parameterMeta = ParameterScanner.getParameterMeta(field, annotation);
             Object value = configMap.get(parameterMeta.getName());
-            if(value == null) {
+            if (value == null) {
                 continue;
             }
             Object fieldValue = getParamValue(parameterMeta, value);
@@ -42,14 +42,14 @@ public class ParameterConfigurer {
 
     protected static Object getParamValue(ParameterMeta parameterMeta, Object value) {
         DataType fieldDataType = parameterMeta.getType();
-        if(DataType.LIST == fieldDataType) {
+        if (DataType.LIST == fieldDataType) {
             List result = new ArrayList();
             List list = (List) value;
             for (Object item : list) {
                 result.add(ParamValueConverter.convert(parameterMeta.getListParameter().getType(), item));
             }
             return result;
-        } else if(DataType.KV == fieldDataType) {
+        } else if (DataType.KV == fieldDataType) {
             KeyValue result = new KeyValue();
             Map fromMap = (Map) value;
             for (Object k : fromMap.keySet()) {

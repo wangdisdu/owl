@@ -17,7 +17,8 @@ import java.util.Objects;
  */
 public class PredicateAnalyzer {
 
-    private PredicateAnalyzer() {}
+    private PredicateAnalyzer() {
+    }
 
     /**
      * Walks the expression tree, attempting to convert the entire tree into

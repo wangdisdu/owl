@@ -77,11 +77,11 @@ public class BoolQuery extends Query {
     }
 
     private void appendClauses(Map<String, Object> bool, String key, List<Query> queries) {
-        if(queries.size() == 1) {
+        if (queries.size() == 1) {
             bool.put(key, queries.get(0).serialize());
-        } else if(queries.size() > 1) {
+        } else if (queries.size() > 1) {
             List<Map<String, Object>> clauses = new ArrayList<>();
-            for(Query query : queries){
+            for (Query query : queries) {
                 clauses.add(query.serialize());
             }
             bool.put(key, clauses);
@@ -160,9 +160,15 @@ public class BoolQuery extends Query {
         // should
         this.appendClauses(bool, "should", this.shouldClauses);
 
-        if(this.minimumShouldMatch != null) bool.put("minimum_should_match", this.minimumShouldMatch);
-        if(this.boost != null) bool.put("boost", this.boost);
-        if(this.queryName != null) bool.put("_name", this.queryName);
+        if (this.minimumShouldMatch != null) {
+            bool.put("minimum_should_match", this.minimumShouldMatch);
+        }
+        if (this.boost != null) {
+            bool.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            bool.put("_name", this.queryName);
+        }
 
         Map<String, Object> query = new LinkedHashMap<>();
         query.put("bool", bool);

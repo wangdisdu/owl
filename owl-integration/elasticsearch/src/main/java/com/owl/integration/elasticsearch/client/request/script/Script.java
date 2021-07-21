@@ -74,8 +74,12 @@ public class Script implements RequestSerializer {
     public Map<String, Object> serialize() {
         Map<String, Object> source = new LinkedHashMap<>();
         source.put(this.type, script);
-        if(this.lang != null) source.put("lang", this.lang);
-        if(this.params.size() > 0) source.put("params", this.params);
+        if (this.lang != null) {
+            source.put("lang", this.lang);
+        }
+        if (this.params.size() > 0) {
+            source.put("params", this.params);
+        }
         return source;
     }
 

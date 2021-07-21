@@ -79,10 +79,18 @@ public class MatchPhraseQuery extends Query {
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("query", this.query);
-        if(this.analyzer != null)  params.put("analyzer", this.analyzer);
-        if(this.slop != null)  params.put("slop", this.slop);
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.analyzer != null) {
+            params.put("analyzer", this.analyzer);
+        }
+        if (this.slop != null) {
+            params.put("slop", this.slop);
+        }
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
 
         Map<String, Object> match = new LinkedHashMap<>();
         match.put(this.field, params);

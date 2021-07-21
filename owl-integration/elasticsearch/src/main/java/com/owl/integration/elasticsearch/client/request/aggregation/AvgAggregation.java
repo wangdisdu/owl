@@ -71,12 +71,22 @@ public class AvgAggregation extends MetricAggregation {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> opts = new LinkedHashMap<>();
-        if(this.field != null) opts.put("field", this.field);
-        if(this.script != null) opts.put("script", this.script.serialize());
-        if(this.format != null) opts.put("format", this.format);
-        if(this.missing != null) opts.put("missing", this.missing);
+        if (this.field != null) {
+            opts.put("field", this.field);
+        }
+        if (this.script != null) {
+            opts.put("script", this.script.serialize());
+        }
+        if (this.format != null) {
+            opts.put("format", this.format);
+        }
+        if (this.missing != null) {
+            opts.put("missing", this.missing);
+        }
         Map<String, Object> source = new LinkedHashMap<>();
-        if(this.meta.size() > 0) source.put("meta", this.meta);
+        if (this.meta.size() > 0) {
+            source.put("meta", this.meta);
+        }
         source.put("avg", opts);
         return source;
     }

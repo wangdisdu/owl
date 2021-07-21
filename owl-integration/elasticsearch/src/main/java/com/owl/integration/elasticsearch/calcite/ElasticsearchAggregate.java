@@ -2,7 +2,15 @@ package com.owl.integration.elasticsearch.calcite;
 
 import com.google.common.collect.ImmutableList;
 import com.owl.integration.elasticsearch.Constants;
-import com.owl.integration.elasticsearch.client.request.aggregation.*;
+import com.owl.integration.elasticsearch.client.request.aggregation.Aggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.AvgAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.BucketAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.CardinalityAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.MaxAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.MinAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.SumAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.TermsAggregation;
+import com.owl.integration.elasticsearch.client.request.aggregation.ValueCountAggregation;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptCost;
 import org.apache.calcite.plan.RelOptPlanner;
@@ -16,7 +24,13 @@ import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.util.ImmutableBitSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of
@@ -104,7 +118,7 @@ public class ElasticsearchAggregate extends Aggregate implements ElasticsearchRe
             //todo udf field
             final String name = inputFields.get(group);
             BucketAggregation bucket = toBucketAggregation(name);
-            if(lastBucket == null) {
+            if (lastBucket == null) {
                 aggregations.put(name, bucket);
             } else {
                 lastBucket.addSubAggregation(name, bucket);
@@ -120,7 +134,7 @@ public class ElasticsearchAggregate extends Aggregate implements ElasticsearchRe
             //todo udf field
             final String name = names.isEmpty() ? Constants.ID : names.get(0);
             Aggregation metric = toMetricAggregation(name, aggCall);
-            if(lastBucket == null) {
+            if (lastBucket == null) {
                 aggregations.put(name, metric);
             } else {
                 lastBucket.addSubAggregation(name, metric);

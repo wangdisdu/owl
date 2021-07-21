@@ -52,7 +52,7 @@ public class JdbcIntegration implements IntegrationBuilder<JdbcConfig>  {
         // https://calcite.apache.org/docs/adapter.html#jdbc-connect-string-parameters
         info.setProperty("lex", "MYSQL");
         info.setProperty("FUN", "MYSQL");
-        if(config.getJdbcProperties() != null && !config.getJdbcProperties().isEmpty()) {
+        if (config.getJdbcProperties() != null && !config.getJdbcProperties().isEmpty()) {
             info.putAll(config.getJdbcProperties());
         }
         Connection con = null;
@@ -76,8 +76,11 @@ public class JdbcIntegration implements IntegrationBuilder<JdbcConfig>  {
             result.setIntegration(this);
             return result;
         } catch (Exception ex) {
-            if(con != null) {
-                try { con.close(); } catch (Exception ignore) {}
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception ignore) {
+                }
             }
             throw ex;
         }

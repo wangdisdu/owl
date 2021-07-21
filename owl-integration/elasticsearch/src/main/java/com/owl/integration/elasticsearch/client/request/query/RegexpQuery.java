@@ -79,15 +79,23 @@ public class RegexpQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(this.boost == null && this.queryName == null && this.flags == null && this.maxDeterminizedStates == null) {
+        if (this.boost == null && this.queryName == null && this.flags == null && this.maxDeterminizedStates == null) {
             params.put(this.field, this.regexp);
         } else {
             Map<String, Object> sub = new LinkedHashMap<>();
             sub.put("value", this.regexp);
-            if(this.flags != null) sub.put("flags", this.flags);
-            if(this.maxDeterminizedStates != null) sub.put("max_determinized_states", this.maxDeterminizedStates);
-            if(this.boost != null) sub.put("boost", this.boost);
-            if(this.queryName != null) sub.put("_name", this.queryName);
+            if (this.flags != null) {
+                sub.put("flags", this.flags);
+            }
+            if (this.maxDeterminizedStates != null) {
+                sub.put("max_determinized_states", this.maxDeterminizedStates);
+            }
+            if (this.boost != null) {
+                sub.put("boost", this.boost);
+            }
+            if (this.queryName != null) {
+                sub.put("_name", this.queryName);
+            }
             params.put(this.field, sub);
         }
         Map<String, Object> query = new LinkedHashMap<>();

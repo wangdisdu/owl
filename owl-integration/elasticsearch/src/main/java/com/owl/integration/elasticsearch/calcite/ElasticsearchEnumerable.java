@@ -1,6 +1,10 @@
 package com.owl.integration.elasticsearch.calcite;
 
-import org.apache.calcite.adapter.enumerable.*;
+import org.apache.calcite.adapter.enumerable.EnumerableRel;
+import org.apache.calcite.adapter.enumerable.EnumerableRelImplementor;
+import org.apache.calcite.adapter.enumerable.JavaRowFormat;
+import org.apache.calcite.adapter.enumerable.PhysType;
+import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.linq4j.tree.BlockStatement;
 import org.apache.calcite.linq4j.tree.Blocks;
 import org.apache.calcite.linq4j.tree.Expressions;

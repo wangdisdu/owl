@@ -9,7 +9,7 @@ import java.util.Map;
  * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-ids-query.html
  */
 public class IdsQuery extends Query {
-    protected List<String> types = new ArrayList<>();;
+    protected List<String> types = new ArrayList<>();
     protected List<String> values = new ArrayList<>();
     protected Double boost;
     protected String queryName;
@@ -61,22 +61,26 @@ public class IdsQuery extends Query {
     }
 
     // {
-    //	"ids" : {
-    //		"type" : "my_type",
-    //		"values" : ["1", "4", "100"]
-    //	}
+    //  "ids" : {
+    //      "type" : "my_type",
+    //      "values" : ["1", "4", "100"]
+    //  }
     // }
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(types.size() == 1) {
+        if (types.size() == 1) {
             params.put("type", types.get(0));
-        } else if(types.size() > 1) {
+        } else if (types.size() > 1) {
             params.put("type", types);
         }
         params.put("values", values);
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
         Map<String, Object> query = new LinkedHashMap<>();
         query.put("ids", params);
         return query;

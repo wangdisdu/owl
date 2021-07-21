@@ -63,13 +63,17 @@ public class TermsQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> term = new LinkedHashMap<>();
-        if(this.queryName == null && this.boost == null) {
+        if (this.queryName == null && this.boost == null) {
             term.put(this.field, this.values);
         } else {
             Map<String, Object> sub = new LinkedHashMap<>();
             sub.put("value", this.values);
-            if(this.boost != null) sub.put("boost", this.boost);
-            if(this.queryName != null) sub.put("_name", this.queryName);
+            if (this.boost != null) {
+                sub.put("boost", this.boost);
+            }
+            if (this.queryName != null) {
+                sub.put("_name", this.queryName);
+            }
             term.put(this.field, sub);
         }
         Map<String, Object> query = new LinkedHashMap<>();

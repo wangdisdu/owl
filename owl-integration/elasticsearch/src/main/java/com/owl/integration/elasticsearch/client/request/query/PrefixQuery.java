@@ -54,13 +54,17 @@ public class PrefixQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(this.boost == null && this.queryName == null) {
+        if (this.boost == null && this.queryName == null) {
             params.put(this.field, this.prefix);
         } else {
             Map<String, Object> sub = new LinkedHashMap<>();
             sub.put("value", this.prefix);
-            if(this.boost != null) sub.put("boost", this.boost);
-            if(this.queryName != null) sub.put("_name", this.queryName);
+            if (this.boost != null) {
+                sub.put("boost", this.boost);
+            }
+            if (this.queryName != null) {
+                sub.put("_name", this.queryName);
+            }
             params.put(this.field, sub);
         }
         Map<String, Object> query = new LinkedHashMap<>();

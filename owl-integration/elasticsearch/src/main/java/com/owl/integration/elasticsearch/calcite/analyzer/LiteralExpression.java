@@ -23,7 +23,7 @@ public class LiteralExpression implements TerminalExpression {
     }
 
     public Object value() {
-        if(isSArg()) {
+        if (isSArg()) {
             return sargValues();
         } else if (isIntegral()) {
             return longValue();
@@ -79,15 +79,15 @@ public class LiteralExpression implements TerminalExpression {
         Sarg sarg = (Sarg) literal.getValue();
         Set<Range> ranges = sarg.rangeSet.asRanges();
         ranges.forEach(i -> {
-            if(i.hasLowerBound()) {
+            if (i.hasLowerBound()) {
                 Object lower = i.lowerEndpoint();
-                if(lower instanceof NlsString) {
+                if (lower instanceof NlsString) {
                     values.add(((NlsString) lower).getValue());
                 }
             }
-            if(i.hasUpperBound()) {
+            if (i.hasUpperBound()) {
                 Object upper = i.upperEndpoint();
-                if(upper instanceof NlsString) {
+                if (upper instanceof NlsString) {
                     values.add(((NlsString) upper).getValue());
                 }
             }

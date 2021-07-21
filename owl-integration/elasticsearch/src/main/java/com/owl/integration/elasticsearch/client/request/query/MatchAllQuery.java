@@ -20,9 +20,13 @@ public class MatchAllQuery extends Query {
         return this;
     }
 
-    public Float getBoost() { return this.boost; }
+    public Float getBoost() {
+        return this.boost;
+    }
 
-    public String getQueryName() { return this.queryName; }
+    public String getQueryName() {
+        return this.queryName;
+    }
 
     /*{
         "match_all": {
@@ -32,8 +36,12 @@ public class MatchAllQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
         Map<String, Object> outline = new LinkedHashMap<>();
         outline.put("match_all", params);
         return outline;

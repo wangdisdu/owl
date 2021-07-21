@@ -62,7 +62,7 @@ public class KafkaEnumerator implements Enumerator<Object[]> {
 
     @Override
     public void reset() {
-        if(consumer != null) {
+        if (consumer != null) {
             consumer.close();
             consumer = null;
         }
@@ -72,14 +72,14 @@ public class KafkaEnumerator implements Enumerator<Object[]> {
 
     @Override
     public void close() {
-        if(consumer != null) {
+        if (consumer != null) {
             consumer.unsubscribe();
             consumer.close();
         }
     }
 
     private KafkaConsumer<String, String> getConsumer() {
-        if(consumer != null) {
+        if (consumer != null) {
             return consumer;
         }
         Properties props = new Properties();
@@ -89,9 +89,9 @@ public class KafkaEnumerator implements Enumerator<Object[]> {
         props.put("group.id", "OWL_" + topic + "_" + IdUtil.simpleUUID());
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> _consumer = new KafkaConsumer<>(props);
-        _consumer.subscribe(Collections.singletonList(topic));
-        consumer = _consumer;
+        KafkaConsumer<String, String> temp = new KafkaConsumer<>(props);
+        temp.subscribe(Collections.singletonList(topic));
+        consumer = temp;
         return consumer;
     }
 }

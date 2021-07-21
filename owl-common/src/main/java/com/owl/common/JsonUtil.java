@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 public class JsonUtil {
@@ -45,24 +44,8 @@ public class JsonUtil {
         return MAPPER.convertValue(json, valueType);
     }
 
-    public static <T> T decodeUnSafe(String value, Class<T> valueType) {
-        try {
-            return decode(value, valueType);
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-    }
-
     public static <T> T decode(String value, TypeReference<T> valueTypeRef) throws IOException {
         return MAPPER.readValue(value, valueTypeRef);
-    }
-
-    public static <T> T decodeUnSafe(String value, TypeReference<T> valueTypeRef) {
-        try {
-            return decode(value, valueTypeRef);
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
     }
 
     public static <T> T decode(JsonNode json, TypeReference<T> valueTypeRef) throws IOException {
@@ -71,14 +54,6 @@ public class JsonUtil {
 
     public static Map<String, Object> decode2Map(String value) throws IOException {
         return decode(value, new TypeReference<Map<String, Object>>() {});
-    }
-
-    public static Map<String, Object> decode2MapUnSafe(String value) {
-        try {
-            return decode2Map(value);
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
     }
 
     public static Map<String, Object> decode2Map(JsonNode json) throws IOException {
@@ -91,6 +66,30 @@ public class JsonUtil {
 
     public static JsonNode decode2Tree(String value) throws IOException {
         return MAPPER.readTree(value);
+    }
+
+    public static <T> T decodeUnSafe(String value, Class<T> valueType) {
+        try {
+            return decode(value, valueType);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    public static <T> T decodeUnSafe(String value, TypeReference<T> valueTypeRef) {
+        try {
+            return decode(value, valueTypeRef);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    public static Map<String, Object> decode2MapUnSafe(String value) {
+        try {
+            return decode2Map(value);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
     }
 
     public static JsonNode decode2TreeUnSafe(String value) {

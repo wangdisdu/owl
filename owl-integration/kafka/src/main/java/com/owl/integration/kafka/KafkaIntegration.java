@@ -71,8 +71,11 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
             result.setIntegration(this);
             return result;
         } catch (Exception ex) {
-            if(con != null) {
-                try { con.close(); } catch (Exception ignore) {}
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception ignore) {
+                }
             }
             throw ex;
         }
@@ -80,7 +83,7 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
 
     @Override
     public void close() throws IOException {
-        if(schema != null) {
+        if (schema != null) {
             schema.close();
         }
     }

@@ -4,7 +4,11 @@ import com.google.common.base.Preconditions;
 import com.owl.integration.elasticsearch.Constants;
 import com.owl.integration.elasticsearch.client.request.query.Query;
 import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rex.*;
+import org.apache.calcite.rex.RexCall;
+import org.apache.calcite.rex.RexInputRef;
+import org.apache.calcite.rex.RexLiteral;
+import org.apache.calcite.rex.RexNode;
+import org.apache.calcite.rex.RexVisitorImpl;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlSyntax;
 import org.apache.calcite.sql.type.SqlTypeFamily;
@@ -65,8 +69,7 @@ public class PredicateVisitor extends RexVisitorImpl<Expression> {
                         if (call.getOperator().getName().equalsIgnoreCase("ITEM")) {
                             return toNamedField((RexLiteral) call.getOperands().get(1));
                         }
-                        String message = String.format(Locale.ROOT, "Unsupported call: [%s]", call);
-                        throw new PredicateAnalyzerException(message);
+                        throw analyzerException(call, syntax);
                 }
             case FUNCTION:
                 if (call.getOperator().getName().equalsIgnoreCase("CONTAINS")) {
@@ -75,17 +78,21 @@ public class PredicateVisitor extends RexVisitorImpl<Expression> {
                             operands.get(operands.size() - 1));
                     return QueryExpression.create(new NamedFieldExpression("")).queryString(query);
                 }
+                throw analyzerException(call, syntax);
             case INTERNAL:
-                switch (call.getKind()) {
-                    case SEARCH:
-                        return binary(call);
+                if (call.getKind() == SqlKind.SEARCH) {
+                    return binary(call);
                 }
-                // fall through
+                throw analyzerException(call, syntax);
             default:
-                String message = format(Locale.ROOT, "Unsupported syntax [%s] for call: [%s]",
-                        syntax, call);
-                throw new PredicateAnalyzerException(message);
+                throw analyzerException(call, syntax);
         }
+    }
+
+    private PredicateAnalyzerException analyzerException(RexCall call, SqlSyntax syntax) {
+        String message = format(Locale.ROOT, "Unsupported syntax [%s] for call: [%s]",
+                syntax, call);
+        return new PredicateAnalyzerException(message);
     }
 
     private boolean supportedRexCall(RexCall call) {
@@ -126,16 +133,22 @@ public class PredicateVisitor extends RexVisitorImpl<Expression> {
                     case IS_NOT_NULL:
                     case IS_NULL:
                         return true;
+                    default:
+                        return false;
                 }
             case PREFIX: // NOT()
                 switch (call.getKind()) {
                     case NOT:
                         return true;
+                    default:
+                        return false;
                 }
             case INTERNAL:
                 switch (call.getKind()) {
                     case SEARCH:
                         return true;
+                    default:
+                        return false;
                 }
                 // fall through
             case FUNCTION_ID:

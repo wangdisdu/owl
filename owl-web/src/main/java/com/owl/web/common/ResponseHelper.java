@@ -6,11 +6,12 @@ import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class ResponseHelper {
 
-    public static void writeJSONString(HttpServletResponse response, String json, Integer status) throws IOException {
+    public static void writeJsonString(HttpServletResponse response, String json, Integer status) throws IOException {
         if (response == null) {
             throw new IOException("response is null");
         }
@@ -21,8 +22,8 @@ public class ResponseHelper {
         response.flushBuffer();
     }
 
-    public static void writeJSON(HttpServletResponse response, Object json, Integer status) throws IOException {
-        writeJSONString(response, JsonUtil.encode(json), status);
+    public static void writeJson(HttpServletResponse response, Object json, Integer status) throws IOException {
+        writeJsonString(response, JsonUtil.encode(json), status);
     }
 
     public static void refreshCookie(HttpServletResponse response, String token) {

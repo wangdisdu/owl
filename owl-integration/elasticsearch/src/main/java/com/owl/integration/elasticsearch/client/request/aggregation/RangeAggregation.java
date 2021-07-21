@@ -116,25 +116,41 @@ public class RangeAggregation extends BucketAggregation {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> opts = new LinkedHashMap<>();
-        if(this.field != null) opts.put("field", this.field);
-        if(this.script != null) opts.put("script", this.script.serialize());
-        if(this.missing != null) opts.put("missing", this.missing);
-        if(this.keyed != null) opts.put("keyed", this.keyed);
+        if (this.field != null) {
+            opts.put("field", this.field);
+        }
+        if (this.script != null) {
+            opts.put("script", this.script.serialize());
+        }
+        if (this.missing != null) {
+            opts.put("missing", this.missing);
+        }
+        if (this.keyed != null) {
+            opts.put("keyed", this.keyed);
+        }
         List<Map<String, Object>> ranges = new ArrayList<>();
-        for(Entry entry : this.entries) {
+        for (Entry entry : this.entries) {
             Map<String, Object> ran = new LinkedHashMap<>();
-            if(entry.key != null) ran.put("key", entry.key);
-            if(entry.from != null) ran.put("from", entry.from);
-            if(entry.to != null) ran.put("to", entry.to);
+            if (entry.key != null) {
+                ran.put("key", entry.key);
+            }
+            if (entry.from != null) {
+                ran.put("from", entry.from);
+            }
+            if (entry.to != null) {
+                ran.put("to", entry.to);
+            }
             ranges.add(ran);
         }
         opts.put("ranges", ranges);
         Map<String, Object> source = new LinkedHashMap<>();
-        if(this.meta.size() > 0) source.put("meta", this.meta);
+        if (this.meta.size() > 0) {
+            source.put("meta", this.meta);
+        }
         source.put("range", opts);
-        if(this.subAggregations.size() > 0) {
+        if (this.subAggregations.size() > 0) {
             Map<String, Object> subAggs = new LinkedHashMap<>();
-            for(Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
+            for (Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
                 subAggs.put(entry.getKey(), entry.getValue().serialize());
             }
             source.put("aggregations", subAggs);

@@ -255,29 +255,67 @@ public class QueryStringQuery extends Query {
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("query", this.query);
-        if(this.defaultField != null)  params.put("default_field", this.defaultField);
-        if(this.defaultOperator != null)  params.put("default_operator", this.defaultOperator);
-        if(this.analyzer != null)  params.put("analyzer", this.analyzer);
-        if(this.quoteAnalyzer != null)  params.put("quote_analyzer", this.quoteAnalyzer);
-        if(this.quoteFieldSuffix != null)  params.put("quote_field_suffix", this.quoteFieldSuffix);
-        if(this.allowLeadingWildcard != null)  params.put("allow_leading_wildcard", this.allowLeadingWildcard);
-        if(this.enablePositionIncrements != null)  params.put("enable_position_increments", this.enablePositionIncrements);
-        if(this.analyzeWildcard != null)  params.put("analyze_wildcard", this.analyzeWildcard);
-        if(this.fuzziness != null)  params.put("fuzziness", this.fuzziness);
-        if(this.fuzzyPrefixLength != null)  params.put("fuzzy_prefix_length", this.fuzzyPrefixLength);
-        if(this.fuzzyMaxExpansions != null)  params.put("fuzzy_max_expansions", this.fuzzyMaxExpansions);
-        if(this.phraseSlop != null)  params.put("phrase_slop", this.phraseSlop);
-        if(this.tieBreaker != null)  params.put("tie_breaker", this.tieBreaker);
-        if(this.minimumShouldMatch != null)  params.put("minimum_should_match", this.minimumShouldMatch);
-        if(this.lenient != null)  params.put("lenient", this.lenient);
-        if(this.timeZone != null)  params.put("time_zone", this.timeZone);
-        if(this.maxDeterminizedStates != null)  params.put("max_determinized_states", this.maxDeterminizedStates);
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
-        if(this.fields.size() > 0) {
+        if (this.defaultField != null) {
+            params.put("default_field", this.defaultField);
+        }
+        if (this.defaultOperator != null) {
+            params.put("default_operator", this.defaultOperator);
+        }
+        if (this.analyzer != null) {
+            params.put("analyzer", this.analyzer);
+        }
+        if (this.quoteAnalyzer != null) {
+            params.put("quote_analyzer", this.quoteAnalyzer);
+        }
+        if (this.quoteFieldSuffix != null) {
+            params.put("quote_field_suffix", this.quoteFieldSuffix);
+        }
+        if (this.allowLeadingWildcard != null) {
+            params.put("allow_leading_wildcard", this.allowLeadingWildcard);
+        }
+        if (this.enablePositionIncrements != null) {
+            params.put("enable_position_increments", this.enablePositionIncrements);
+        }
+        if (this.analyzeWildcard != null) {
+            params.put("analyze_wildcard", this.analyzeWildcard);
+        }
+        if (this.fuzziness != null) {
+            params.put("fuzziness", this.fuzziness);
+        }
+        if (this.fuzzyPrefixLength != null) {
+            params.put("fuzzy_prefix_length", this.fuzzyPrefixLength);
+        }
+        if (this.fuzzyMaxExpansions != null) {
+            params.put("fuzzy_max_expansions", this.fuzzyMaxExpansions);
+        }
+        if (this.phraseSlop != null) {
+            params.put("phrase_slop", this.phraseSlop);
+        }
+        if (this.tieBreaker != null) {
+            params.put("tie_breaker", this.tieBreaker);
+        }
+        if (this.minimumShouldMatch != null) {
+            params.put("minimum_should_match", this.minimumShouldMatch);
+        }
+        if (this.lenient != null) {
+            params.put("lenient", this.lenient);
+        }
+        if (this.timeZone != null) {
+            params.put("time_zone", this.timeZone);
+        }
+        if (this.maxDeterminizedStates != null) {
+            params.put("max_determinized_states", this.maxDeterminizedStates);
+        }
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
+        if (this.fields.size() > 0) {
             List<String> array = new ArrayList<>();
-            for(String field : fields) {
-                if(this.fieldBoosts.containsKey(field)) {
+            for (String field : fields) {
+                if (this.fieldBoosts.containsKey(field)) {
                     array.add(String.format("%s^%s", field, String.valueOf(this.fieldBoosts.get(field))));
                 } else {
                     array.add(field);

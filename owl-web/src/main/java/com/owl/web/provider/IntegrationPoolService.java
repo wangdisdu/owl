@@ -44,12 +44,15 @@ public class IntegrationPoolService {
             connection = IntegrationPool.connect(context, config);
         } catch (Exception e) {
             logger.error("connect", e);
-            if(connection != null) {
-                try { connection.close(); } catch (IOException ignore) {}
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (IOException ignore) {
+                }
             }
             throw new BizException(ResponseCode.FAILED, e);
         }
-        if(handler != null) {
+        if (handler != null) {
             try {
                 handler.handle(connection);
             } catch (Exception e) {

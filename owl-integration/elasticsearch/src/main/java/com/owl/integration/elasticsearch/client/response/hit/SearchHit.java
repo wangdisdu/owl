@@ -69,11 +69,21 @@ public class SearchHit implements ResponseDeserializer {
 
     @Override
     public SearchHit deserialize(JsonNode json) throws IOException {
-        if (json.has(SCORE)) this.score = json.get(SCORE).asDouble();
-        if (json.has(INDEX)) this.index = json.get(INDEX).asText();
-        if (json.has(TYPE)) this.type = json.get(TYPE).asText();
-        if (json.has(ID)) this.id = json.get(ID).asText();
-        if (json.has(VERSION)) this.version = json.get(VERSION).asLong();
+        if (json.has(SCORE)) {
+            this.score = json.get(SCORE).asDouble();
+        }
+        if (json.has(INDEX)) {
+            this.index = json.get(INDEX).asText();
+        }
+        if (json.has(TYPE)) {
+            this.type = json.get(TYPE).asText();
+        }
+        if (json.has(ID)) {
+            this.id = json.get(ID).asText();
+        }
+        if (json.has(VERSION)) {
+            this.version = json.get(VERSION).asLong();
+        }
         if (json.has(SOURCE)) {
             this.source = JsonUtil.decode2Map(json.get(SOURCE));
         }

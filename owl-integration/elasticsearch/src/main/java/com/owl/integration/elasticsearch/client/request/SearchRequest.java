@@ -121,40 +121,46 @@ public class SearchRequest implements Serializable {
 
     public Map<String, Object> build() {
         Map<String, Object> source = new LinkedHashMap<>();
-        if(this.query != null) {
+        if (this.query != null) {
             source.put("query", this.query.serialize());
         }
-        if(this.from != null) source.put("from", this.from);
-        if(this.size != null) source.put("size", this.size);
-        if(CollUtil.isNotEmpty(this.sorters)) {
+        if (this.from != null) {
+            source.put("from", this.from);
+        }
+        if (this.size != null) {
+            source.put("size", this.size);
+        }
+        if (CollUtil.isNotEmpty(this.sorters)) {
             List<Map<String, Object>> sorts = new ArrayList<>();
-            for(Sorter s : this.sorters) { sorts.add(s.serialize()); }
+            for (Sorter s : this.sorters) {
+                sorts.add(s.serialize());
+            }
             source.put("sort", sorts);
         }
-        if(CollUtil.isNotEmpty(this.includeFields) && CollUtil.isNotEmpty(this.excludeFields)) {
+        if (CollUtil.isNotEmpty(this.includeFields) && CollUtil.isNotEmpty(this.excludeFields)) {
             Map<String, Object> param = new LinkedHashMap<>();
             param.put("includes", this.includeFields);
             param.put("excludes", this.excludeFields);
             source.put("_source", param);
-        } else if(CollUtil.isNotEmpty(this.excludeFields)) {
+        } else if (CollUtil.isNotEmpty(this.excludeFields)) {
             Map<String, Object> param = new LinkedHashMap<>();
             param.put("excludes", this.excludeFields);
             source.put("_source", param);
-        } else if(CollUtil.isNotEmpty(this.includeFields)) {
+        } else if (CollUtil.isNotEmpty(this.includeFields)) {
             source.put("_source", this.includeFields);
         }
-        if(this.scriptFields.size() > 0) {
+        if (this.scriptFields.size() > 0) {
             Map<String, Object> param = new LinkedHashMap<>();
-            for(Map.Entry<String, Script> e : this.scriptFields.entrySet()){
+            for (Map.Entry<String, Script> e : this.scriptFields.entrySet()) {
                 Map<String, Object> script = new LinkedHashMap<>();
                 script.put("script", e.getValue().serialize());
                 param.put(e.getKey(), script);
             }
             source.put("script_fields", param);
         }
-        if(CollUtil.isNotEmpty(this.aggregations)) {
+        if (CollUtil.isNotEmpty(this.aggregations)) {
             Map<String, Object> param = new LinkedHashMap<>();
-            for(Map.Entry<String, Aggregation> e : this.aggregations.entrySet()){
+            for (Map.Entry<String, Aggregation> e : this.aggregations.entrySet()) {
                 param.put(e.getKey(), e.getValue().serialize());
             }
             source.put("aggregations", param);

@@ -28,10 +28,10 @@ public abstract class BaseQuery<T> {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
         BaseFilter<T> filter = getFilter();
         BaseSorter<T> sort = getSorter();
-        if(filter != null) {
+        if (filter != null) {
             filter.where(wrapper);
         }
-        if(sort != null) {
+        if (sort != null) {
             sort.order(wrapper);
         }
         return wrapper;
@@ -39,7 +39,7 @@ public abstract class BaseQuery<T> {
 
     public Page<T> page() {
         //mybatis 分页 从1开始...
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             return new Page<>(page + 1L, size);
         }
         return new Page<>(1, AppConfig.MAX_PAGE_ROW_COUNT);

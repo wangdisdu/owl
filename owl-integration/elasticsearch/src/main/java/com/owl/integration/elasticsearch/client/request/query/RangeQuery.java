@@ -125,26 +125,32 @@ public class RangeQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(this.from != null) {
-            if(this.includeFrom != null && this.includeFrom) {
+        if (this.from != null) {
+            if (this.includeFrom != null && this.includeFrom) {
                 params.put("gte", this.from);
             } else {
                 params.put("gt", this.from);
             }
         }
-        if(this.to != null) {
-            if(this.includeTo != null && this.includeTo) {
+        if (this.to != null) {
+            if (this.includeTo != null && this.includeTo) {
                 params.put("lte", this.to);
             } else {
                 params.put("lt", this.to);
             }
         }
-        if(this.timeZone != null){
+        if (this.timeZone != null) {
             params.put("time_zone", this.timeZone);
         }
-        if(this.format != null) params.put("format", this.format);
-        if(this.boost != null) params.put("boost", this.boost);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.format != null) {
+            params.put("format", this.format);
+        }
+        if (this.boost != null) {
+            params.put("boost", this.boost);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
 
         Map<String, Object> range = new LinkedHashMap<>();
         range.put(this.field, params);

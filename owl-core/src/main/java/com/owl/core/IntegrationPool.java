@@ -18,7 +18,7 @@ public class IntegrationPool {
         }
         String lastId = cache.getIntegration().getContext().getConnectionId();
         String currId = context.getConnectionId();
-        if(currId.equals(lastId)) {
+        if (currId.equals(lastId)) {
             return cache;
         }
         cache.close();

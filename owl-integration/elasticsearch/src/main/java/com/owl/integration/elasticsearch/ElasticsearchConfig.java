@@ -1,11 +1,8 @@
 package com.owl.integration.elasticsearch;
 
-import com.owl.api.SmartConfig;
 import com.owl.api.IntegrationConfig;
-import com.owl.api.annotation.KeyValue;
+import com.owl.api.SmartConfig;
 import com.owl.api.annotation.Parameter;
-
-import java.util.List;
 
 public class ElasticsearchConfig extends SmartConfig implements IntegrationConfig {
     @Parameter(

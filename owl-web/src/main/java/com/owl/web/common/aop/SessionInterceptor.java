@@ -29,15 +29,15 @@ public class SessionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
-        if(!isNeedLogin(handler)) {
+        if (!isNeedLogin(handler)) {
             return true;
         }
         TbUser user = readUser(request, response);
-        if(user != null) {
+        if (user != null) {
             ContextHolder.holder.set(new RequestContext(user));
             return true;
         }
-        ResponseHelper.writeJSON(
+        ResponseHelper.writeJson(
                 response,
                 new ResponseResult(ResponseCode.FAILED),
                 HttpServletResponse.SC_UNAUTHORIZED);
@@ -58,12 +58,12 @@ public class SessionInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod)handler;
         LoginRequired methodLogin = handlerMethod.getMethodAnnotation(LoginRequired.class);
-        if(methodLogin != null) {
+        if (methodLogin != null) {
             return methodLogin.required();
         }
         Class<?> clazz = handlerMethod.getBeanType();
         LoginRequired clazzLogin = clazz.getAnnotation(LoginRequired.class);
-        if(clazzLogin != null) {
+        if (clazzLogin != null) {
             return clazzLogin.required();
         }
         return false;
@@ -72,9 +72,9 @@ public class SessionInterceptor implements HandlerInterceptor {
     private TbUser readUser(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         String token = null;
-        if(cookies != null && cookies.length > 0) {
-            for(Cookie cookie : cookies) {
-                if(AppConfig.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if (AppConfig.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
                     token = cookie.getValue();
                     //发现新Cookie跳出循环
                     break;
@@ -82,10 +82,10 @@ public class SessionInterceptor implements HandlerInterceptor {
             }
         }
         TbUser user = null;
-        if(StrUtil.isNotEmpty(token)) {
+        if (StrUtil.isNotEmpty(token)) {
             user = userService.getUserByToken(token);
         }
-        if(user != null) {
+        if (user != null) {
             ResponseHelper.refreshCookie(response, token);
         }
         return user;

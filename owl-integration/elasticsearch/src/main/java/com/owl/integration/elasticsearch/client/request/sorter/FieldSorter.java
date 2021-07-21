@@ -72,9 +72,15 @@ public class FieldSorter extends Sorter {
     public Map<String, Object> serialize() {
         Map<String, Object> opts = new LinkedHashMap<>();
         opts.put("order", this.ascending ? "asc" : "desc");
-        if(this.missing != null) opts.put("missing", this.missing);
-        if(this.unmappedType != null) opts.put("unmapped_type", this.unmappedType);
-        if(this.sortMode != null) opts.put("mode", this.sortMode);
+        if (this.missing != null) {
+            opts.put("missing", this.missing);
+        }
+        if (this.unmappedType != null) {
+            opts.put("unmapped_type", this.unmappedType);
+        }
+        if (this.sortMode != null) {
+            opts.put("mode", this.sortMode);
+        }
         Map<String, Object> source = new LinkedHashMap<>();
         source.put(this.field, opts);
         return source;

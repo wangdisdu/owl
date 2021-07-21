@@ -10,10 +10,10 @@ public interface IServiceExtend<T> extends IService<T> {
 
     default T getById(Serializable id, boolean throwExists, boolean throwNotExists) {
         T t = getById(id);
-        if(t != null && throwExists) {
+        if (t != null && throwExists) {
             throw new BizException(ResponseCode.EXIST);
         }
-        if(t == null && throwNotExists) {
+        if (t == null && throwNotExists) {
             throw new BizException(ResponseCode.NOT_EXIST);
         }
         return t;

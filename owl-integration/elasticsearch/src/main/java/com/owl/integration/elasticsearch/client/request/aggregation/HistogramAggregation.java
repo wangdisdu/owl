@@ -42,6 +42,7 @@ public class HistogramAggregation extends BucketAggregation {
         this.meta.put(key, value);
         return this;
     }
+
     public HistogramAggregation setMeta(Map<String, Object> meta) {
         this.meta = meta;
         return this;
@@ -175,34 +176,50 @@ public class HistogramAggregation extends BucketAggregation {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> opts = new LinkedHashMap<>();
-        if(this.field != null) opts.put("field", this.field);
-        if(this.interval != null) opts.put("interval", this.interval);
-        if(this.script != null) opts.put("script", this.script.serialize());
-        if(this.missing != null) opts.put("missing", this.missing);
-        if(this.minDocCount != null) opts.put("min_doc_count", this.minDocCount);
-        if(this.offset != null) opts.put("offset", this.offset);
-        if(this.keyed != null) opts.put("keyed", this.keyed);
-        if(this.order != null) {
+        if (this.field != null) {
+            opts.put("field", this.field);
+        }
+        if (this.interval != null) {
+            opts.put("interval", this.interval);
+        }
+        if (this.script != null) {
+            opts.put("script", this.script.serialize());
+        }
+        if (this.missing != null) {
+            opts.put("missing", this.missing);
+        }
+        if (this.minDocCount != null) {
+            opts.put("min_doc_count", this.minDocCount);
+        }
+        if (this.offset != null) {
+            opts.put("offset", this.offset);
+        }
+        if (this.keyed != null) {
+            opts.put("keyed", this.keyed);
+        }
+        if (this.order != null) {
             Map<String, String> ord = new LinkedHashMap<>();
             ord.put(this.order, this.orderAsc ? "asc" : "desc");
             opts.put("order", ord);
         }
-        if(this.extendedBoundsMax != null || this.extendedBoundsMin != null) {
+        if (this.extendedBoundsMax != null || this.extendedBoundsMin != null) {
             Map<String, Object> bounds = new LinkedHashMap<>();
-            if(this.extendedBoundsMax != null) {
+            if (this.extendedBoundsMax != null) {
                 bounds.put("max", this.extendedBoundsMax);
             }
-            if(this.extendedBoundsMin != null) {
+            if (this.extendedBoundsMin != null) {
                 bounds.put("min", this.extendedBoundsMin);
             }
             opts.put("extended_bounds", bounds);
         }
         Map<String, Object> source = new LinkedHashMap<>();
-        if(this.meta.size() > 0) source.put("meta", this.meta);
+        if (this.meta.size() > 0) {
+            source.put("meta", this.meta);
+        }
         source.put("histogram", opts);
-        if(this.subAggregations.size() > 0) {
+        if (this.subAggregations.size() > 0) {
             Map<String, Object> subAggs = new LinkedHashMap<>();
-            for(Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
+            for (Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
                 subAggs.put(entry.getKey(), entry.getValue().serialize());
             }
             source.put("aggregations", subAggs);

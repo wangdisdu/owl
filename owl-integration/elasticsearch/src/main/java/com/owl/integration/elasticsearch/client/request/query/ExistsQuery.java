@@ -35,7 +35,9 @@ public class ExistsQuery extends Query {
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("field", this.field);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
         Map<String, Object> query = new LinkedHashMap<>();
         query.put("exists", params);
         return query;

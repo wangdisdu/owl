@@ -20,10 +20,10 @@ public class SingleMetricResponse extends AggregationResponse {
 
     @Override
     public SingleMetricResponse deserialize(JsonNode json) throws IOException {
-        if(json.has(VALUE)) {
+        if (json.has(VALUE)) {
             this.value = json.get(VALUE).asDouble();
         }
-        if(json.has(AggregationResponse.META)) {
+        if (json.has(AggregationResponse.META)) {
             this.meta = JsonUtil.decode2Map(json.get(AggregationResponse.META));
         }
         return this;

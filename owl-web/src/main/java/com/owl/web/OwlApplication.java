@@ -26,7 +26,7 @@ public class OwlApplication {
         try {
             String pid = getPid();
             boolean locked = writeAndLock(PID_FILE_NAME, pid.getBytes(StandardCharsets.UTF_8));
-            if(!locked) {
+            if (!locked) {
                 println("请勿重复启动");
                 System.exit(0);
             }
@@ -48,11 +48,11 @@ public class OwlApplication {
 
     public static String getHome() {
         String home = System.getenv("OWL_HOME");
-        if(StrUtil.isNotBlank(home)) {
+        if (StrUtil.isNotBlank(home)) {
             return home;
         }
         home = System.getProperty("OWL_HOME");
-        if(StrUtil.isNotBlank(home)) {
+        if (StrUtil.isNotBlank(home)) {
             return home;
         }
         return "owl";
@@ -89,7 +89,7 @@ public class OwlApplication {
         //4. lock()，阻塞的方法，当文件锁不可用时，当前进程会被挂起 lock = channel.lock()
         //5. tryLock()，非阻塞的方法，当文件锁不可用时，tryLock()会得到null值
         FileLock lock = channel.tryLock();
-        if(lock != null) {
+        if (lock != null) {
             file.write(bytes); // 不能关闭文件流，关闭会导致lock释放！
             return true;
         }

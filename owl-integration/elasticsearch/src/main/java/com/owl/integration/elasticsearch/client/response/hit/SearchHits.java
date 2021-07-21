@@ -45,7 +45,7 @@ public class SearchHits implements ResponseDeserializer {
         if (json.has(MAX_SCORE)) {
             this.maxScore = json.get(MAX_SCORE).asDouble();
         }
-        if(json.get(TOTAL).isObject()) {
+        if (json.get(TOTAL).isObject()) {
             this.total = json.get(TOTAL).get(VALUE).asLong();
         } else {
             this.total = json.get(TOTAL).asLong();

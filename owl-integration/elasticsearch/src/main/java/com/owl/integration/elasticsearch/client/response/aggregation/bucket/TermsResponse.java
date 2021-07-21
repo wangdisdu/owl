@@ -25,13 +25,13 @@ public class TermsResponse extends BucketResponse {
 
     @Override
     public TermsResponse deserialize(JsonNode json) throws IOException {
-        if(json.has(KEY)) {
+        if (json.has(KEY)) {
             this.key = json.get(KEY).asText();
         }
-        if(json.has(DOC_COUNT)) {
+        if (json.has(DOC_COUNT)) {
             this.docCount = json.get(DOC_COUNT).asLong();
         }
-        if(json.has(AggregationResponse.META)) {
+        if (json.has(AggregationResponse.META)) {
             this.meta = JsonUtil.decode2Map(json.get(AggregationResponse.META));
         }
         return this;

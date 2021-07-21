@@ -28,7 +28,7 @@ public class IntegrationBuilderService {
     public IntegrationMeta builder(String builder) {
         List<IntegrationMeta> list = scan();
         for (IntegrationMeta meta : list) {
-            if(StrUtil.equals(builder, meta.getBuilder())) {
+            if (StrUtil.equals(builder, meta.getBuilder())) {
                 return meta;
             }
         }
@@ -37,7 +37,7 @@ public class IntegrationBuilderService {
 
     public byte[] icon(String builder) {
         IntegrationMeta meta = builder(builder);
-        if(meta == null || StrUtil.isBlank(meta.getIcon())) {
+        if (meta == null || StrUtil.isBlank(meta.getIcon())) {
             return null;
         }
         String path = "/Integration-ICON/" + meta.getIcon();

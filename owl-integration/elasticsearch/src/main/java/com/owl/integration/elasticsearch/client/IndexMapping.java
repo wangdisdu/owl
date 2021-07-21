@@ -34,7 +34,7 @@ public class IndexMapping {
                 Iterator<JsonNode> mappings = root.get("mappings").iterator();
                 while (mappings.hasNext()) {
                     JsonNode mapping = mappings.next();
-                    if(!mapping.has("properties")) {
+                    if (!mapping.has("properties")) {
                         continue;
                     }
                     flattenMappingProperty(null, mapping.get("properties"), result);
@@ -44,14 +44,14 @@ public class IndexMapping {
         return new IndexMapping(index, result);
     }
 
-    private static void flattenMappingProperty(String parent, JsonNode node, Map<String, String> result){
+    private static void flattenMappingProperty(String parent, JsonNode node, Map<String, String> result) {
         Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
         while (iterator.hasNext()) {
             Map.Entry<String, JsonNode> properties = iterator.next();
             String key = properties.getKey();
             String name = parent == null ? key : parent + "." + key;
             JsonNode property = properties.getValue();
-            if (property.has("properties")){
+            if (property.has("properties")) {
                 flattenMappingProperty(name, property.get("properties"), result);
             } else {
                 result.putIfAbsent(name, property.get("type").asText());

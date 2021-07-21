@@ -41,14 +41,14 @@ public class KafkaConnection implements IntegrationConnection {
 
     @Override
     public void close() throws IOException {
-        if(connection != null) {
+        if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
                 throw new IOException(e);
             }
         }
-        if(integration != null) {
+        if (integration != null) {
             integration.close();
         }
     }

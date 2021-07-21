@@ -196,24 +196,44 @@ public class TermsAggregation extends BucketAggregation {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> opts = new LinkedHashMap<>();
-        if(this.field != null) opts.put("field", this.field);
-        if(this.script != null) opts.put("script", this.script.serialize());
-        if(this.missing != null) opts.put("missing", this.missing);
-        if(this.size != null) opts.put("size", this.size);
-        if(this.shardSize != null) opts.put("shard_size", this.shardSize);
-        if(this.minDocCount != null) opts.put("min_doc_count", this.minDocCount);
-        if(this.shardMinDocCount != null) opts.put("shard_min_doc_count", this.shardMinDocCount);
-        if(this.showTermDocCountError != null) opts.put("show_term_doc_count_error", this.showTermDocCountError);
-        if(this.executionHint != null) opts.put("execution_hint", this.executionHint);
-        if(this.collectionMode != null) opts.put("collect_mode", this.collectionMode);
+        if (this.field != null) {
+            opts.put("field", this.field);
+        }
+        if (this.script != null) {
+            opts.put("script", this.script.serialize());
+        }
+        if (this.missing != null) {
+            opts.put("missing", this.missing);
+        }
+        if (this.size != null) {
+            opts.put("size", this.size);
+        }
+        if (this.shardSize != null) {
+            opts.put("shard_size", this.shardSize);
+        }
+        if (this.minDocCount != null) {
+            opts.put("min_doc_count", this.minDocCount);
+        }
+        if (this.shardMinDocCount != null) {
+            opts.put("shard_min_doc_count", this.shardMinDocCount);
+        }
+        if (this.showTermDocCountError != null) {
+            opts.put("show_term_doc_count_error", this.showTermDocCountError);
+        }
+        if (this.executionHint != null) {
+            opts.put("execution_hint", this.executionHint);
+        }
+        if (this.collectionMode != null) {
+            opts.put("collect_mode", this.collectionMode);
+        }
         // Include
-        if(this.includeNumPartitions != null && this.includeNumPartitions > 0) {
+        if (this.includeNumPartitions != null && this.includeNumPartitions > 0) {
             Map<String, Integer> inc = new LinkedHashMap<>();
             inc.put("partition", this.includePartition);
             inc.put("num_partitions", this.includeNumPartitions);
             opts.put("include", inc);
         } else if (this.includeValues != null && this.includeValues.size() > 0) {
-            if(this.includeValues.size() == 1) {
+            if (this.includeValues.size() == 1) {
                 opts.put("include", this.includeValues.get(0));
             } else {
                 opts.put("include", this.includeValues);
@@ -221,7 +241,7 @@ public class TermsAggregation extends BucketAggregation {
         }
         // Exclude
         if (this.excludeValues != null && this.excludeValues.size() > 0) {
-            if(this.includeValues.size() == 1) {
+            if (this.includeValues.size() == 1) {
                 opts.put("exclude", this.excludeValues.get(0));
             } else {
                 opts.put("exclude", this.excludeValues);
@@ -235,7 +255,7 @@ public class TermsAggregation extends BucketAggregation {
             opts.put("order", ord);
         } else  if (this.orders.size() > 1) {
             List<Map<String, String>> ords = new ArrayList<>();
-            for(Order o : this.orders) {
+            for (Order o : this.orders) {
                 Map<String, String> ord = new LinkedHashMap<>();
                 ord.put(o.field, o.ascending ? "asc" : "desc");
                 ords.add(ord);
@@ -243,11 +263,13 @@ public class TermsAggregation extends BucketAggregation {
             opts.put("order", ords);
         }
         Map<String, Object> source = new LinkedHashMap<>();
-        if(this.meta.size() > 0) source.put("meta", this.meta);
+        if (this.meta.size() > 0) {
+            source.put("meta", this.meta);
+        }
         source.put("terms", opts);
-        if(this.subAggregations.size() > 0) {
+        if (this.subAggregations.size() > 0) {
             Map<String, Object> subAggs = new LinkedHashMap<>();
-            for(Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
+            for (Map.Entry<String, Aggregation> entry : this.subAggregations.entrySet()) {
                 subAggs.put(entry.getKey(), entry.getValue().serialize());
             }
             source.put("aggregations", subAggs);

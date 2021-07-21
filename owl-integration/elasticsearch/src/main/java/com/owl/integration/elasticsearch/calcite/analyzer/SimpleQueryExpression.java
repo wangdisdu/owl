@@ -1,7 +1,7 @@
 package com.owl.integration.elasticsearch.calcite.analyzer;
 
-import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.Query;
+import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.RangeQuery;
 
 import java.util.GregorianCalendar;
@@ -75,7 +75,7 @@ public class SimpleQueryExpression extends QueryExpression {
             query = QueryBuilders.boolQuery()
                     .addMust(addFormatIfNecessary(literal, QueryBuilders.rangeQuery(getFieldReference()).setGTE(value)))
                     .addMust(addFormatIfNecessary(literal, QueryBuilders.rangeQuery(getFieldReference()).setLTE(value)));
-        } else if(value instanceof List) {
+        } else if (value instanceof List) {
             query = QueryBuilders.termsQuery(getFieldReference(), (List<Object>) value);
         } else {
             query = QueryBuilders.termQuery(getFieldReference(), value);

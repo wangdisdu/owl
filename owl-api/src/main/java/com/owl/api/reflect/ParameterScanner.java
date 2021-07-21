@@ -26,9 +26,9 @@ public class ParameterScanner {
     protected static Map<String, ParameterMeta> scanParameters(Class<?> configClass) {
         Map<String, ParameterMeta> result = new LinkedHashMap<>();
         Field[] fields = ReflectUtil.getFields(configClass);
-        for(Field field : fields) {
+        for (Field field : fields) {
             Parameter annotation = field.getAnnotation(Parameter.class);
-            if(annotation == null) {
+            if (annotation == null) {
                 continue;
             }
             ParameterMeta meta = getParameterMeta(field, annotation);
@@ -50,7 +50,7 @@ public class ParameterScanner {
         meta.setRequired(annotation.required());
         meta.setOrder(annotation.order());
         meta.setPassword(annotation.password());
-        if(DataType.LIST == fieldDataType) {
+        if (DataType.LIST == fieldDataType) {
             Type fieldType = TypeUtil.getType(field);
             Type actualType = TypeUtil.getTypeArgument(fieldType);
             Class<?> actualClass = TypeUtil.getClass(actualType);

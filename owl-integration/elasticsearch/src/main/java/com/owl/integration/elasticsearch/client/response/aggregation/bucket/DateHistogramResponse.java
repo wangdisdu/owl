@@ -27,16 +27,16 @@ public class DateHistogramResponse extends BucketResponse {
 
     @Override
     public DateHistogramResponse deserialize(JsonNode json) throws IOException {
-        if(json.has(AggregationResponse.KEY)) {
+        if (json.has(AggregationResponse.KEY)) {
             this.key = json.get(AggregationResponse.KEY).asDouble();
         }
-        if(json.has(AggregationResponse.KEY_AS_STRING)) {
+        if (json.has(AggregationResponse.KEY_AS_STRING)) {
             this.keyAsString = json.get(AggregationResponse.KEY_AS_STRING).asText();
         }
-        if(json.has(AggregationResponse.DOC_COUNT)) {
+        if (json.has(AggregationResponse.DOC_COUNT)) {
             this.docCount = json.get(AggregationResponse.DOC_COUNT).asLong();
         }
-        if(json.has(AggregationResponse.META)) {
+        if (json.has(AggregationResponse.META)) {
             this.meta = JsonUtil.decode2Map(json.get(AggregationResponse.META));
         }
         return this;

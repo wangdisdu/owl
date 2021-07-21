@@ -1,15 +1,18 @@
 package com.owl.web.provider;
 
 import com.owl.api.IntegrationConnection;
-import com.owl.api.schema.ColumnType;
 import com.owl.api.schema.DataFrame;
 import com.owl.api.schema.TableColumn;
 import com.owl.api.schema.TableRow;
 import com.owl.web.common.config.AppConfig;
 import com.owl.web.model.integration.IntegrationQuery;
-import org.apache.ibatis.type.JdbcType;
 
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class LoadDataFrameHandler implements ConnectionHandler {
     private final IntegrationQuery query;
@@ -38,7 +41,7 @@ public class LoadDataFrameHandler implements ConnectionHandler {
                 while (resultSet.next()) {
                     TableRow row = new TableRow();
                     for (int i = 1; i <= columnCount; i++) {
-                        String column = dataFrame.getColumns().get(i-1).getName();
+                        String column = dataFrame.getColumns().get(i - 1).getName();
                         Object value = getColumnValue(resultSet, i);
                         row.put(column, value);
                     }

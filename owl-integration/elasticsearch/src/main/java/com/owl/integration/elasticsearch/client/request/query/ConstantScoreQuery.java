@@ -37,7 +37,7 @@ public class ConstantScoreQuery extends Query {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
-        if(boost != null) {
+        if (boost != null) {
             params.put("boost", boost);
         }
         params.put("filter", filter.serialize());

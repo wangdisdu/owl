@@ -83,7 +83,7 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
     public RelDataType getRowType(RelDataTypeFactory relDataTypeFactory) {
         final RelDataTypeFactory.Builder builder = relDataTypeFactory.builder();
         for (TableColumn column : tableSchema.getColumns()) {
-            SqlTypeName sqlTypeName = SqlTypeName.getNameForJdbcType(column.getJdbcType().TYPE_CODE);
+            SqlTypeName sqlTypeName = SqlTypeName.getNameForJdbcType(column.getJdbcType().code);
             RelDataType relDataType = relDataTypeFactory.createSqlType(sqlTypeName);
             builder.add(column.getName(), relDataType).nullable(true);
         }
@@ -94,13 +94,13 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
         List<Object[]> results = new ArrayList<>();
         SearchResponse response = indexClient.search(implementor.search);
 
-        if(implementor.aggregated) {
+        if (implementor.aggregated) {
             for (AggregationResponse bucket : response.getAggregations()) {
                 List<Object> row = new ArrayList<>();
                 row.add(bucket.getName());
-                if(CollUtil.isNotEmpty(bucket.getAggregations())) {
-                    for(AggregationResponse agg : bucket.getAggregations()) {
-                        if(agg instanceof SingleMetricResponse) {
+                if (CollUtil.isNotEmpty(bucket.getAggregations())) {
+                    for (AggregationResponse agg : bucket.getAggregations()) {
+                        if (agg instanceof SingleMetricResponse) {
                             row.add(((SingleMetricResponse) agg).getValue());
                         }
                     }
@@ -115,7 +115,7 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
             for (SearchHit hit : response.getHits().getHits()) {
                 List<Object> row = new ArrayList<>();
                 Map<String, Object> source = hit.getSource();
-                if(CollUtil.isEmpty(implementor.fieldMap)) {
+                if (CollUtil.isEmpty(implementor.fieldMap)) {
                     tableSchema.getColumns().forEach(column -> {
                         row.add(ParamValueConverter.convert(
                                 column.getJavaType(),

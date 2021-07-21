@@ -72,8 +72,11 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
             result.setIntegration(this);
             return result;
         } catch (Exception ex) {
-            if(con != null) {
-                try { con.close(); } catch (Exception ignore) {}
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception ignore) {
+                }
             }
             throw ex;
         }
@@ -81,7 +84,7 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
 
     @Override
     public void close() throws IOException {
-        if(schema != null) {
+        if (schema != null) {
             schema.close();
         }
     }

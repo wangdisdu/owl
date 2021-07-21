@@ -1,8 +1,8 @@
 package com.owl.integration.elasticsearch.calcite;
 
 import com.owl.integration.elasticsearch.calcite.analyzer.PredicateAnalyzer;
-import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.Query;
+import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptCost;
 import org.apache.calcite.plan.RelOptPlanner;

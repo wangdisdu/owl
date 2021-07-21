@@ -10,7 +10,10 @@ import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeField;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface ElasticsearchRelNode extends RelNode {
 
@@ -68,13 +71,13 @@ public interface ElasticsearchRelNode extends RelNode {
         }
 
         void setOffset(int offset) {
-            if(offset >= 0) {
+            if (offset >= 0) {
                 search.setFrom(offset);
             }
         }
 
         void setFetch(int fetch) {
-            if(fetch >= 0) {
+            if (fetch >= 0) {
                 search.setSize(fetch);
             }
         }

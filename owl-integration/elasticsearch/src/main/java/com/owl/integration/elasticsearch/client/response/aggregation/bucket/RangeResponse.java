@@ -38,16 +38,16 @@ public class RangeResponse extends BucketResponse {
 
     @Override
     public RangeResponse deserialize(JsonNode json) throws IOException {
-        if(json.has(AggregationResponse.FROM)) {
+        if (json.has(AggregationResponse.FROM)) {
             this.from = json.get(AggregationResponse.FROM).asDouble();
         }
-        if(json.has(AggregationResponse.TO)) {
+        if (json.has(AggregationResponse.TO)) {
             this.to = json.get(AggregationResponse.TO).asDouble();
         }
-        if(json.has(AggregationResponse.DOC_COUNT)) {
+        if (json.has(AggregationResponse.DOC_COUNT)) {
             this.docCount = json.get(AggregationResponse.DOC_COUNT).asLong();
         }
-        if(json.has(AggregationResponse.META)) {
+        if (json.has(AggregationResponse.META)) {
             this.meta = JsonUtil.decode2Map(json.get(AggregationResponse.META));
         }
         return this;

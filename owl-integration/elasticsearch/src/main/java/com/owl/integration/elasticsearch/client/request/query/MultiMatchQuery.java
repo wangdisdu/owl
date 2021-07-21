@@ -2,16 +2,21 @@ package com.owl.integration.elasticsearch.client.request.query;
 
 import com.owl.common.EasyUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
  */
 public class MultiMatchQuery extends Query {
-    public final static String BestFields = "best_fields";
-    public final static String MostFields = "most_fields";
-    public final static String CrossFields = "cross_fields";
-    public final static String Phrase = "phrase";
+    public static final String BestFields = "best_fields";
+    public static final String MostFields = "most_fields";
+    public static final String CrossFields = "cross_fields";
+    public static final String Phrase = "phrase";
 
 
     protected Object query;
@@ -216,23 +221,57 @@ public class MultiMatchQuery extends Query {
     public Map<String, Object> serialize() {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("query", query);
-        if(fields.size() > 0) params.put("fields", fields);
-        if(type != null) params.put("type", type);
-        if(operator != null) params.put("operator", operator);
-        if(analyzer != null) params.put("analyzer", analyzer);
-        if(boost != null) params.put("boost", boost);
-        if(slop != null) params.put("slop", slop);
-        if(fuzziness != null) params.put("fuzziness", fuzziness);
-        if(prefixLength != null) params.put("prefix_length", prefixLength);
-        if(maxExpansions != null) params.put("max_expansions", maxExpansions);
-        if(minimumShouldMatch != null) params.put("minimum_should_match", minimumShouldMatch);
-        if(rewrite != null) params.put("rewrite", rewrite);
-        if(fuzzyRewrite != null) params.put("fuzzy_rewrite", fuzzyRewrite);
-        if(tieBreaker != null) params.put("tie_breaker", tieBreaker);
-        if(lenient != null) params.put("lenient", lenient);
-        if(cutoffFrequency != null) params.put("cutoff_frequency", cutoffFrequency);
-        if(zeroTermsQuery != null) params.put("zero_terms_query", zeroTermsQuery);
-        if(this.queryName != null) params.put("_name", this.queryName);
+        if (fields.size() > 0) {
+            params.put("fields", fields);
+        }
+        if (type != null) {
+            params.put("type", type);
+        }
+        if (operator != null) {
+            params.put("operator", operator);
+        }
+        if (analyzer != null) {
+            params.put("analyzer", analyzer);
+        }
+        if (boost != null) {
+            params.put("boost", boost);
+        }
+        if (slop != null) {
+            params.put("slop", slop);
+        }
+        if (fuzziness != null) {
+            params.put("fuzziness", fuzziness);
+        }
+        if (prefixLength != null) {
+            params.put("prefix_length", prefixLength);
+        }
+        if (maxExpansions != null) {
+            params.put("max_expansions", maxExpansions);
+        }
+        if (minimumShouldMatch != null) {
+            params.put("minimum_should_match", minimumShouldMatch);
+        }
+        if (rewrite != null) {
+            params.put("rewrite", rewrite);
+        }
+        if (fuzzyRewrite != null) {
+            params.put("fuzzy_rewrite", fuzzyRewrite);
+        }
+        if (tieBreaker != null) {
+            params.put("tie_breaker", tieBreaker);
+        }
+        if (lenient != null) {
+            params.put("lenient", lenient);
+        }
+        if (cutoffFrequency != null) {
+            params.put("cutoff_frequency", cutoffFrequency);
+        }
+        if (zeroTermsQuery != null) {
+            params.put("zero_terms_query", zeroTermsQuery);
+        }
+        if (this.queryName != null) {
+            params.put("_name", this.queryName);
+        }
 
         Map<String, Object> mq = new LinkedHashMap<>();
         mq.put("multi_match", params);
