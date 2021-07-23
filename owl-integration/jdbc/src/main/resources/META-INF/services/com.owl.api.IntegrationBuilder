@@ -2,3 +2,6 @@ com.owl.integration.jdbc.JdbcIntegration
 com.owl.integration.mysql.MysqlIntegration
 com.owl.integration.vertica.VerticaIntegration
 com.owl.integration.clickhouse.ClickHouseIntegration
+com.owl.integration.db2.Db2Integration
+com.owl.integration.oracle.OracleIntegration
+com.owl.integration.sqlserver.SqlServerIntegration
