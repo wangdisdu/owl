@@ -52,13 +52,15 @@ import java.util.Map;
 public class MongoTable extends AbstractQueryableTable
         implements TranslatableTable {
     private final String collectionName;
+    private final MongoDatabase mongoDb;
 
     /**
      * Creates a MongoTable.
      */
-    MongoTable(String collectionName) {
+    MongoTable(String collectionName, MongoDatabase mongoDb) {
         super(Object[].class);
         this.collectionName = collectionName;
+        this.mongoDb = mongoDb;
     }
 
     public String toString() {
@@ -175,7 +177,7 @@ public class MongoTable extends AbstractQueryableTable
         }
 
         private MongoDatabase getMongoDb() {
-            return schema.unwrap(MongoSchema.class).mongoDb;
+            return getTable().mongoDb;
         }
 
         private MongoTable getTable() {

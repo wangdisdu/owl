@@ -113,11 +113,16 @@ class MongoEnumerator implements Enumerator<Object> {
     static Function1<Document, Object> getter(
             List<Map.Entry<String, Class>> fields) {
         //noinspection unchecked
-        return fields == null
-                ? (Function1) mapGetter()
-                : fields.size() == 1
-                ? singletonGetter(fields.get(0).getKey(), fields.get(0).getValue())
-                : (Function1) listGetter(fields);
+        if (fields == null || fields.isEmpty()) {
+            return (Function1) mapGetter();
+        }
+        if (fields.size() == 1) {
+            if ("_MAP".equals(fields.get(0).getKey())) {
+                return (Function1) mapGetter();
+            }
+            return singletonGetter(fields.get(0).getKey(), fields.get(0).getValue());
+        }
+        return (Function1) listGetter(fields);
     }
 
     private static Object convert(Object o, Class clazz) {

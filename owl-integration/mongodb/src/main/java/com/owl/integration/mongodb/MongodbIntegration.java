@@ -4,8 +4,6 @@ import com.owl.api.IntegrationBuilder;
 import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.api.schema.IntegrationSchema;
-import com.owl.api.schema.TableSchema;
 import com.owl.integration.mongodb.calcite.MongoSchema;
 import com.owl.integration.mongodb.calcite.MongoSchemaFactory;
 import com.owl.integration.mongodb.calcite.MongoTable;
@@ -67,8 +65,6 @@ public class MongodbIntegration implements IntegrationBuilder<MongodbConfig> {
             for (String tableName : schema.getTableNames()) {
                 MongoTable table = (MongoTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
-                TableSchema tableSchema = new TableSchema();
-                tableSchema.setName(tableName);
             }
 
             MongodbConnection result = new MongodbConnection();

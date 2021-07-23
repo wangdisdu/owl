@@ -22,11 +22,13 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.ListCollectionsIterable;
 import com.mongodb.client.MongoDatabase;
 import com.owl.api.schema.IntegrationSchema;
 import com.owl.api.schema.TableSchema;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
+import org.bson.Document;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -37,9 +39,10 @@ import java.util.Map;
  * is a MONGO file in that directory.
  */
 public class MongoSchema extends AbstractSchema implements Closeable {
-    final MongoClient client;
-    final MongoDatabase mongoDb;
-    final IntegrationSchema integrationSchema = new IntegrationSchema();
+    private final MongoClient client;
+    private final MongoDatabase mongoDb;
+    private final Map<String, Table> tableMap;
+    private final IntegrationSchema integrationSchema = new IntegrationSchema();
 
     /**
      * Creates a MongoDB schema.
@@ -57,6 +60,7 @@ public class MongoSchema extends AbstractSchema implements Closeable {
                     ? new MongoClient(new ServerAddress(host), options)
                     : new MongoClient(new ServerAddress(host), credential, options);
             this.mongoDb = client.getDatabase(database);
+            this.tableMap = createTables();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,9 +68,17 @@ public class MongoSchema extends AbstractSchema implements Closeable {
 
     @Override
     protected Map<String, Table> getTableMap() {
+        return tableMap;
+    }
+
+    private Map<String, Table> createTables() {
         final ImmutableMap.Builder<String, Table> builder = ImmutableMap.builder();
+        ListCollectionsIterable<Document> collections = mongoDb.listCollections();
+        for (Document collection : collections) {
+            collection.toString();
+        }
         for (String collectionName : mongoDb.listCollectionNames()) {
-            builder.put(collectionName, new MongoTable(collectionName));
+            builder.put(collectionName, new MongoTable(collectionName, mongoDb));
             TableSchema tableSchema = new TableSchema();
             tableSchema.setName(collectionName);
             integrationSchema.addTable(tableSchema);
