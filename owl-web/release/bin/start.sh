@@ -18,6 +18,6 @@ LoggingConfig=${OWL_HOME}/conf/logback-spring.xml
 ConfigLocation=classpath:/application.yml,file://${OWL_HOME}/conf/application.yml
 LibDir=${OWL_HOME}/lib
 
-OWL_JAVA_OPTS="-Xmx1024m -Xms1024m"
+OWL_JAVA_OPTS="-Xmx4096m -Xms4096m"
 
 exec "$JAVA" -Dloader.path=${LibDir} -jar $OWL_JAVA_OPTS -Dspring.config.location=${ConfigLocation} -Dlogging.config=${LoggingConfig} ${ProgramJar} "$@" <&- &

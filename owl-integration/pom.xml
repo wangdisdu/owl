@@ -15,6 +15,9 @@
         <module>kafka</module>
         <module>jdbc</module>
         <module>mongodb</module>
+        <module>mysql</module>
+        <module>vertica</module>
+        <module>clickhouse</module>
     </modules>
 
 </project>

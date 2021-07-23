@@ -1,11 +1,14 @@
-package com.owl.integration.kafka;
+package com.owl.integration.mongodb;
 
 import com.owl.api.IntegrationBuilder;
+import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
-import com.owl.integration.kafka.calcite.KafkaSchema;
-import com.owl.integration.kafka.calcite.KafkaSchemaFactory;
-import com.owl.integration.kafka.calcite.KafkaStreamTable;
+import com.owl.api.schema.IntegrationSchema;
+import com.owl.api.schema.TableSchema;
+import com.owl.integration.mongodb.calcite.MongoSchema;
+import com.owl.integration.mongodb.calcite.MongoSchemaFactory;
+import com.owl.integration.mongodb.calcite.MongoTable;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.calcite.schema.SchemaPlus;
 
@@ -16,20 +19,28 @@ import java.util.Map;
 import java.util.Properties;
 
 @Integration(
-        display = "Kafka",
-        description = "Kafka Integration",
-        sqlPlaceholder = "SELECT STREAM * FROM",
-        icon = "Kafka.svg"
+        display = "Mongodb",
+        description = "Mongodb Integration",
+        sqlPlaceholder = "SELECT * FROM",
+        icon = "Mongodb.svg"
 )
-public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
+public class MongodbIntegration implements IntegrationBuilder<MongodbConfig> {
     private IntegrationContext context;
-    private KafkaConfig config;
-    private KafkaSchema schema;
+    private MongodbConfig config;
+    private MongoSchema schema;
+
 
     @Override
-    public void build(IntegrationContext context, KafkaConfig config) throws Exception {
+    public void build(IntegrationContext context, MongodbConfig config) throws Exception {
         this.context = context;
         this.config = config;
+    }
+
+    @Override
+    public MongodbConfig configure(Map<String, Object> map) {
+        MongodbConfig config = new MongodbConfig();
+        config.configure(map);
+        return config;
     }
 
     @Override
@@ -38,14 +49,7 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
     }
 
     @Override
-    public KafkaConfig configure(Map<String, Object> map) {
-        KafkaConfig config = new KafkaConfig();
-        config.configure(map);
-        return config;
-    }
-
-    @Override
-    public KafkaConnection connect() throws Exception {
+    public IntegrationConnection connect() throws Exception {
         //init calcite jdbc driver
         Class.forName("org.apache.calcite.jdbc.Driver");
         Properties info = new Properties();
@@ -57,14 +61,17 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
             CalciteConnection connection = con.unwrap(CalciteConnection.class);
             SchemaPlus rootSchema = connection.getRootSchema();
             Map<String, Object> operand = config.getParameters();
-            KafkaSchemaFactory factory = new KafkaSchemaFactory();
-            schema = factory.create(rootSchema, "default", operand);
+            MongoSchemaFactory factory = new MongoSchemaFactory();
+            schema = (MongoSchema) factory.create(rootSchema, "default", operand);
             rootSchema.add("default", schema);
             for (String tableName : schema.getTableNames()) {
-                KafkaStreamTable table = (KafkaStreamTable) schema.getTable(tableName);
+                MongoTable table = (MongoTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
+                TableSchema tableSchema = new TableSchema();
+                tableSchema.setName(tableName);
             }
-            KafkaConnection result = new KafkaConnection();
+
+            MongodbConnection result = new MongodbConnection();
             result.setConnection(con);
             result.setSchema(schema.getIntegrationSchema());
             result.setIntegration(this);

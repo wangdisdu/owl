@@ -35,5 +35,11 @@
             <artifactId>kafka</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.owl</groupId>
+            <artifactId>mongodb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

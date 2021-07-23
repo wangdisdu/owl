@@ -1,4 +1,4 @@
-package com.owl.integration.jdbc;
+package com.owl.integration.mongodb;
 
 import com.owl.api.IntegrationConnection;
 import com.owl.api.schema.IntegrationSchema;
@@ -7,17 +7,17 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class JdbcConnection implements IntegrationConnection {
+public class MongodbConnection implements IntegrationConnection {
     private Connection connection;
     private IntegrationSchema schema;
-    private BaseIntegration integration;
+    private MongodbIntegration integration;
 
     @Override
     public Connection getConnection() {
         return connection;
     }
 
-    public JdbcConnection setConnection(Connection connection) {
+    public MongodbConnection setConnection(Connection connection) {
         this.connection = connection;
         return this;
     }
@@ -27,17 +27,17 @@ public class JdbcConnection implements IntegrationConnection {
         return schema;
     }
 
-    public JdbcConnection setSchema(IntegrationSchema schema) {
+    public MongodbConnection setSchema(IntegrationSchema schema) {
         this.schema = schema;
         return this;
     }
 
     @Override
-    public BaseIntegration getIntegration() {
+    public MongodbIntegration getIntegration() {
         return integration;
     }
 
-    public JdbcConnection setIntegration(BaseIntegration integration) {
+    public MongodbConnection setIntegration(MongodbIntegration integration) {
         this.integration = integration;
         return this;
     }

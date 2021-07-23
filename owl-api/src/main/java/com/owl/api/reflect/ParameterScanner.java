@@ -1,6 +1,5 @@
 package com.owl.api.reflect;
 
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.owl.api.annotation.DataType;
@@ -10,6 +9,7 @@ import com.owl.api.annotation.ParameterMeta;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class ParameterScanner {
 
     protected static Map<String, ParameterMeta> scanParameters(Class<?> configClass) {
         Map<String, ParameterMeta> result = new LinkedHashMap<>();
-        Field[] fields = ReflectUtil.getFields(configClass);
+        List<Field> fields = listFields(configClass);
         for (Field field : fields) {
             Parameter annotation = field.getAnnotation(Parameter.class);
             if (annotation == null) {
@@ -60,5 +60,23 @@ public class ParameterScanner {
             meta.setListParameter(actualMeta);
         }
         return meta;
+    }
+
+    private static List<Field> listFields(Class<?> beanClass) {
+        if (beanClass == null) {
+            return new ArrayList<>();
+        }
+
+        List<Field> list = new ArrayList<>();
+
+        Class<?> superClass = beanClass.getSuperclass();
+        if (superClass != null) {
+            List<Field> superList = listFields(superClass);
+            list.addAll(superList);
+        }
+
+        Field[] declaredFields = beanClass.getDeclaredFields();
+        Collections.addAll(list, declaredFields);
+        return list;
     }
 }

@@ -51,7 +51,6 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
         Properties info = new Properties();
         // https://calcite.apache.org/docs/adapter.html#jdbc-connect-string-parameters
         info.setProperty("lex", "MYSQL");
-        info.setProperty("FUN", "MYSQL");
         Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:calcite:", info);

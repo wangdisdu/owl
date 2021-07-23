@@ -36,6 +36,9 @@
         <guava.version>30.0-jre</guava.version>
         <mysql.version>8.0.25</mysql.version>
         <sqlite.version>3.28.0</sqlite.version>
+        <kafka.version>2.1.1</kafka.version>
+        <clickhouse.version>0.3.1</clickhouse.version>
+        <vertcia.version>10.1.1-0</vertcia.version>
     </properties>
 
     <dependencyManagement>
@@ -130,12 +133,34 @@
                 <version>${sqlite.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>ru.yandex.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.vertica.jdbc</groupId>
+                <artifactId>vertica-jdbc</artifactId>
+                <version>${vertcia.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -168,6 +193,14 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

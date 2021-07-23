@@ -1,1 +1,4 @@
 com.owl.integration.jdbc.JdbcIntegration
+com.owl.integration.mysql.MysqlIntegration
+com.owl.integration.vertica.VerticaIntegration
+com.owl.integration.clickhouse.ClickHouseIntegration
