@@ -8,6 +8,7 @@ import com.owl.integration.elasticsearch.client.IndexClient;
 import com.owl.integration.elasticsearch.client.IndexMapping;
 import com.owl.integration.elasticsearch.client.response.SearchResponse;
 import com.owl.integration.elasticsearch.client.response.aggregation.AggregationResponse;
+import com.owl.integration.elasticsearch.client.response.aggregation.bucket.BucketResponse;
 import com.owl.integration.elasticsearch.client.response.aggregation.metrics.SingleMetricResponse;
 import com.owl.integration.elasticsearch.client.response.hit.SearchHit;
 import org.apache.calcite.plan.RelOptCluster;
@@ -23,6 +24,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,47 +92,86 @@ public class ElasticsearchTable extends AbstractTable implements TranslatableTab
         return builder.build();
     }
 
-    public List<Object[]> search(ElasticsearchRelNode.Implementor implementor) {
-        List<Object[]> results = new ArrayList<>();
+    public List<Object> search(ElasticsearchRelNode.Implementor implementor) {
         SearchResponse response = indexClient.search(implementor.search);
-
         if (implementor.aggregated) {
-            for (AggregationResponse bucket : response.getAggregations()) {
-                List<Object> row = new ArrayList<>();
-                row.add(bucket.getName());
-                if (CollUtil.isNotEmpty(bucket.getAggregations())) {
-                    for (AggregationResponse agg : bucket.getAggregations()) {
-                        if (agg instanceof SingleMetricResponse) {
-                            row.add(((SingleMetricResponse) agg).getValue());
-                        }
-                    }
-                }
-                results.add(row.toArray());
-            }
+            return aggEnumerable(implementor, response);
         } else {
-            Map<String, TableColumn> columns = new LinkedHashMap<>();
-            for (TableColumn column : tableSchema.getColumns()) {
-                columns.put(column.getName(), column);
+            return hitEnumerable(implementor, response);
+        }
+    }
+
+    private List<Object> hitEnumerable(ElasticsearchRelNode.Implementor implementor, SearchResponse response) {
+        List<Object> results = new ArrayList<>();
+        Map<String, TableColumn> columns = new LinkedHashMap<>();
+        for (TableColumn column : tableSchema.getColumns()) {
+            columns.put(column.getName(), column);
+        }
+        for (SearchHit hit : response.getHits().getHits()) {
+            List<Object> row = new ArrayList<>();
+            Map<String, Object> source = hit.getSource();
+            if (CollUtil.isEmpty(implementor.fieldMap)) {
+                tableSchema.getColumns().forEach(column -> {
+                    row.add(ParamValueConverter.convert(
+                            column.getJavaType(),
+                            source.get(column.getName())
+                    ));
+                });
+            } else {
+                implementor.fieldMap.forEach((key, value) -> {
+                    row.add(ParamValueConverter.convert(
+                            columns.get(key).getJavaType(),
+                            source.get(key)
+                    ));
+                });
             }
-            for (SearchHit hit : response.getHits().getHits()) {
-                List<Object> row = new ArrayList<>();
-                Map<String, Object> source = hit.getSource();
-                if (CollUtil.isEmpty(implementor.fieldMap)) {
-                    tableSchema.getColumns().forEach(column -> {
-                        row.add(ParamValueConverter.convert(
-                                column.getJavaType(),
-                                source.get(column.getName())
-                        ));
-                    });
+            results.add(row.toArray());
+        }
+        return results;
+    }
+
+    private List<Object> aggEnumerable(ElasticsearchRelNode.Implementor implementor, SearchResponse response) {
+        if (CollUtil.isEmpty(response.getAggregations())) {
+            return new ArrayList<>();
+        }
+        List<AggregationResponse> aggregations = response.getAggregations();
+        boolean isOne = aggregations.size() == 1 && aggregations.get(0) instanceof SingleMetricResponse;
+        if (isOne) {
+            List<Object> results = new ArrayList<>();
+            results.add(((SingleMetricResponse) response.getAggregations().get(0)).getValue());
+            return results;
+        }
+        return aggEnumerable(implementor, aggregations);
+    }
+
+    private List<Object> aggEnumerable(ElasticsearchRelNode.Implementor implementor, List<AggregationResponse> aggregations) {
+        List<Object> results = new ArrayList<>();
+        boolean isBucket = CollUtil.isNotEmpty(aggregations) && aggregations.get(0) instanceof BucketResponse;
+        boolean isMetric = CollUtil.isNotEmpty(aggregations) && aggregations.get(0) instanceof SingleMetricResponse;
+        if (isMetric) {
+            List<Object> row = new ArrayList<>();
+            for (AggregationResponse agg : aggregations) {
+                row.add(((SingleMetricResponse) agg).getValue());
+            }
+            results.add(row.toArray());
+        } else if (isBucket) {
+            for (AggregationResponse agg : aggregations) {
+                if (CollUtil.isNotEmpty(agg.getAggregations())) {
+                    List<Object> subResults = aggEnumerable(implementor, agg.getAggregations());
+                    for (Object subResult : subResults) {
+                        List<Object> row = new ArrayList<>();
+                        row.add(((BucketResponse) agg).getKeyAsString());
+                        if (subResult.getClass().isArray()) {
+                            Object[] subArray = (Object[]) subResult;
+                            row.addAll(Arrays.asList(subArray));
+                        } else {
+                            //todo not support
+                        }
+                        results.add(row.toArray());
+                    }
                 } else {
-                    implementor.fieldMap.forEach((key, value) -> {
-                        row.add(ParamValueConverter.convert(
-                                columns.get(key).getJavaType(),
-                                source.get(key)
-                        ));
-                    });
+                    //todo not support
                 }
-                results.add(row.toArray());
             }
         }
         return results;

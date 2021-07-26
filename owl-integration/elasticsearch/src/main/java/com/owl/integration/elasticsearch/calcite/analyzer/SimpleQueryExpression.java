@@ -5,7 +5,6 @@ import com.owl.integration.elasticsearch.client.request.query.QueryBuilders;
 import com.owl.integration.elasticsearch.client.request.query.RangeQuery;
 
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * Usually basic expression of type {@code a = 'val'} or {@code b > 42}.
@@ -75,8 +74,25 @@ public class SimpleQueryExpression extends QueryExpression {
             query = QueryBuilders.boolQuery()
                     .addMust(addFormatIfNecessary(literal, QueryBuilders.rangeQuery(getFieldReference()).setGTE(value)))
                     .addMust(addFormatIfNecessary(literal, QueryBuilders.rangeQuery(getFieldReference()).setLTE(value)));
-        } else if (value instanceof List) {
-            query = QueryBuilders.termsQuery(getFieldReference(), (List<Object>) value);
+        } else if (value instanceof LiteralExpression.InCollections) {
+            LiteralExpression.InCollections collections = (LiteralExpression.InCollections) value;
+            if (collections.isNot()) {
+                query = QueryBuilders.boolQuery().addMustNot(
+                        QueryBuilders.termsQuery(getFieldReference(), collections.collections)
+                );
+            } else {
+                query = QueryBuilders.termsQuery(getFieldReference(), collections.collections);
+            }
+        } else if (value instanceof LiteralExpression.RangeBound) {
+            LiteralExpression.RangeBound range = (LiteralExpression.RangeBound) value;
+            RangeQuery q = QueryBuilders.rangeQuery(getFieldReference());
+            if (range.getLower() != null) {
+                q.setFrom(range.getLower(), range.isIncludeLower());
+            }
+            if (range.getUpper() != null) {
+                q.setTo(range.getUpper(), range.isIncludeUpper());
+            }
+            query = q;
         } else {
             query = QueryBuilders.termQuery(getFieldReference(), value);
         }

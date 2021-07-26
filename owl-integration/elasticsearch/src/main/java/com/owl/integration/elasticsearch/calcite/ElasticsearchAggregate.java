@@ -119,9 +119,9 @@ public class ElasticsearchAggregate extends Aggregate implements ElasticsearchRe
             final String name = inputFields.get(group);
             BucketAggregation bucket = toBucketAggregation(name);
             if (lastBucket == null) {
-                aggregations.put(name, bucket);
+                aggregations.put(name + group, bucket);
             } else {
-                lastBucket.addSubAggregation(name, bucket);
+                lastBucket.addSubAggregation(name + group, bucket);
             }
             lastBucket = bucket;
         }
@@ -135,9 +135,9 @@ public class ElasticsearchAggregate extends Aggregate implements ElasticsearchRe
             final String name = names.isEmpty() ? Constants.ID : names.get(0);
             Aggregation metric = toMetricAggregation(name, aggCall);
             if (lastBucket == null) {
-                aggregations.put(name, metric);
+                aggregations.put(name + aggCall.name, metric);
             } else {
-                lastBucket.addSubAggregation(name, metric);
+                lastBucket.addSubAggregation(name + aggCall.name, metric);
             }
         }
         implementor.setAggregation(aggregations);

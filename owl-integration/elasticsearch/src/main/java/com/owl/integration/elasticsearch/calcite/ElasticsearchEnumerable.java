@@ -41,7 +41,7 @@ public class ElasticsearchEnumerable extends ConverterImpl implements Enumerable
                 prefer.prefer(JavaRowFormat.ARRAY));
 
         ElasticsearchTable esTable = implementor.elasticsearchTable;
-        List<Object[]> resultList = esTable.search(implementor);
+        List<Object> resultList = esTable.search(implementor);
         BlockStatement block = Blocks.toBlock(Expressions.call(
                 BuiltInMethod.AS_ENUMERABLE2.method, Expressions.constant(resultList.toArray())
         ));
