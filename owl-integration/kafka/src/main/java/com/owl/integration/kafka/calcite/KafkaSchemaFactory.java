@@ -6,8 +6,6 @@ import org.apache.calcite.schema.SchemaPlus;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.Properties;
 import java.util.Set;
 
 public class KafkaSchemaFactory implements SchemaFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSchemaFactory.class);
 
     @Override
     public KafkaSchema create(SchemaPlus parentSchema, String name, Map<String, Object> operand) {

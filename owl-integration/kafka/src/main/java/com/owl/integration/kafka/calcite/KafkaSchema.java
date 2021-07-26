@@ -35,7 +35,7 @@ public class KafkaSchema extends AbstractSchema implements Closeable {
     private Map<String, Table> createTables() {
         final ImmutableMap.Builder<String, Table> builder = ImmutableMap.builder();
         for (String topic : topics) {
-            KafkaStreamTable table = new KafkaStreamTable(topic, config);
+            KafkaTable table = new KafkaTable(topic, config);
             builder.put(topic, table);
             integrationSchema.addTable(table.getTableSchema());
         }
@@ -45,7 +45,7 @@ public class KafkaSchema extends AbstractSchema implements Closeable {
     @Override
     public void close() throws IOException {
         for (Map.Entry<String, Table> entry : tableMap.entrySet()) {
-            ((KafkaStreamTable) entry.getValue()).close();
+            ((KafkaTable) entry.getValue()).close();
         }
     }
 }

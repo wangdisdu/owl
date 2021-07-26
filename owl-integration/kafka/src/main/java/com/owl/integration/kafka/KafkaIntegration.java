@@ -5,7 +5,7 @@ import com.owl.api.IntegrationContext;
 import com.owl.api.annotation.Integration;
 import com.owl.integration.kafka.calcite.KafkaSchema;
 import com.owl.integration.kafka.calcite.KafkaSchemaFactory;
-import com.owl.integration.kafka.calcite.KafkaStreamTable;
+import com.owl.integration.kafka.calcite.KafkaTable;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.calcite.schema.SchemaPlus;
 
@@ -18,7 +18,7 @@ import java.util.Properties;
 @Integration(
         display = "Kafka",
         description = "Kafka Integration",
-        sqlPlaceholder = "SELECT STREAM * FROM",
+        sqlPlaceholder = "SELECT * FROM",
         icon = "Kafka.svg"
 )
 public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
@@ -61,7 +61,7 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
             schema = factory.create(rootSchema, "default", operand);
             rootSchema.add("default", schema);
             for (String tableName : schema.getTableNames()) {
-                KafkaStreamTable table = (KafkaStreamTable) schema.getTable(tableName);
+                KafkaTable table = (KafkaTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
             }
             KafkaConnection result = new KafkaConnection();
