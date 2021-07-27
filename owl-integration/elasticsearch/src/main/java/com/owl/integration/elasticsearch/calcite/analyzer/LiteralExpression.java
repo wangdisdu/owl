@@ -78,9 +78,14 @@ public class LiteralExpression implements TerminalExpression {
     public Object sargValues() {
         Sarg sarg = Objects.requireNonNull(literal.getValueAs(Sarg.class), "Sarg");
         Set<Range> ranges = sarg.rangeSet.asRanges();
-        if (sarg.isPoints() || sarg.isComplementedPoints()) {
+        if (sarg.isPoints()) {
             InCollections collections = new InCollections();
-            collections.setNot(sarg.isComplementedPoints());
+            ranges.forEach(i -> collections.addItem(parseEndpointValue(i.lowerEndpoint())));
+            return collections;
+        } else if (sarg.isComplementedPoints()) {
+            ranges = sarg.negate().rangeSet.asRanges();
+            InCollections collections = new InCollections();
+            collections.setNot(true);
             ranges.forEach(i -> collections.addItem(parseEndpointValue(i.lowerEndpoint())));
             return collections;
         } else {

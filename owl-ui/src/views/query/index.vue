@@ -2,7 +2,7 @@
   <div v-loading="connectLoading" element-loading-text="Connecting" class="app-container">
     <split-pane :min-percent="10" :default-percent="30" split="vertical">
       <template slot="paneL">
-        <div class="schema-container">
+        <div class="left-container">
           <el-input
             v-model="filterSchema"
             placeholder="search"
@@ -11,13 +11,13 @@
           />
           <div class="tree-container">
             <div v-for="(table, i) in ptables" :key="i" class="tree-node">
-              <div class="tree-head" @click="showTable(table)" @dblclick="copyToSql(table.name)">
+              <div class="tree-head" @click="showTable(table)" @dblclick="copyTableToSql(table.name)">
                 <span class="table-icon"><svg-icon icon-class="table" /> </span>
                 <span>{{ table.name }}</span>
               </div>
               <el-collapse-transition>
                 <div v-show="table.show" class="tree-child">
-                  <div v-for="(column, j) in table.columns" :key="j" class="tree-item" @dblclick="copyToSql(column.name)">
+                  <div v-for="(column, j) in table.columns" :key="j" class="tree-item" @dblclick="copyColumnToSql(column.name)">
                     <span class="column-icon"><svg-icon icon-class="column" /> </span>
                     <span>{{ column.name }}</span>
                   </div>
@@ -41,43 +41,53 @@
         </div>
       </template>
       <template slot="paneR">
-        <div style="height: 100%; display: flex; flex-direction: column;">
+        <div class="right-container">
           <div class="editor-container">
             <div class="button-container">
               <el-button-group style="float: right; margin-top: 4px;">
                 <el-button icon="el-icon-video-play" size="small" @click="handleQueryData">Run</el-button>
-                <el-button icon="el-icon-video-pause" size="small">Stop</el-button>
               </el-button-group>
             </div>
             <div>
               <textarea ref="sqleditor" />
             </div>
           </div>
-          <div class="table-container">
-            <el-table
-              v-loading="tableLoading"
-              :data="rows.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-              element-loading-text="Loading"
-              border
-              fit
-              highlight-current-row
-            >
-              <el-table-column v-for="(column, k) in columns" :key="k" :label="column.name">
-                <template slot-scope="scope">
-                  {{ scope.row[column.name] }}
-                </template>
-              </el-table-column>
-            </el-table>
-            <div v-if="rows.length > 0" class="block" style="margin-top:10px;">
-              <el-pagination
-                align="right"
-                layout="total, prev, pager, next"
-                :current-page="currentPage"
-                :page-size="pageSize"
-                :total="rows.length"
-                @current-change="handleCurrentChange"
-              />
-            </div>
+          <div class="tab-container">
+            <el-tabs>
+              <el-tab-pane label="Result">
+                <div class="table-container">
+                  <el-table
+                    v-loading="tableLoading"
+                    :data="rows.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+                    :header-cell-style="{background:'#f5f7fa'}"
+                    element-loading-text="Loading"
+                    border
+                    fit
+                    highlight-current-row>
+                  >
+                    <el-table-column v-for="(column, k) in columns" :key="k" :label="column.name">
+                      <template slot-scope="scope">
+                        {{ scope.row[column.name] }}
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+                <div v-if="rows.length > 0" class="block" style="margin-top:10px;">
+                  <el-pagination
+                    align="right"
+                    layout="total, prev, pager, next"
+                    :current-page="currentPage"
+                    :page-size="pageSize"
+                    :total="rows.length"
+                    @current-change="handleCurrentChange"
+                  />
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="Log">
+              </el-tab-pane>
+              <el-tab-pane label="History">
+              </el-tab-pane>
+            </el-tabs>
           </div>
         </div>
       </template>
@@ -172,7 +182,9 @@ export default {
     showTable(table) {
       table.show = !(table.show === true)
     },
-    copyToSql(name) {
+    copyTableToSql(name) {
+    },
+    copyColumnToSql(name) {
     },
     searchTree() {
       this.vtables = []
@@ -196,13 +208,16 @@ export default {
         sql: this.editor.getValue()
       }
       this.tableLoading = true
+     
       integrationAPI.query(data).then(response => {
         this.columns = response.result.columns
         this.rows = response.result.rows
-      }).catch(() => {})
-        .finally(() => {
-          this.tableLoading = false
-        })
+      }).catch(() => {
+        this.columns = []
+        this.rows = []
+      }).finally(() => {
+        this.tableLoading = false
+      })
     }
   }
 }
@@ -215,11 +230,11 @@ export default {
   height: calc(100vh - 50px);
 }
 
-.schema-container {
+.left-container {
   width: 100%;
   height: 100%;
   padding: 5px;
-  background-color: #f0f0f0;
+  background-color: #f5f7fa;
   border:1px solid rgba(0, 0, 0, .1);
   display: flex;
   flex-direction: column;
@@ -270,21 +285,44 @@ export default {
   margin-left: 20px;
 }
 
-.editor-container {
-  margin-bottom: 12px;
-  border:1px solid rgba(0, 0, 0, .1);
+.right-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .button-container {
-  background: #f5f9fe;
   height: 42px;
-  border-bottom: 1px solid #e1e3e6;
   padding: 0 14px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #e1e3e6;
+}
+
+.editor-container {
+  margin-bottom: 12px;
+  border:1px solid #e1e3e6;
+  background-color: #f5f7fa;
+}
+
+.tab-container {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 14px;
+  border: 1px solid #e1e3e6;
 }
 
 .table-container {
-  flex: 1;
-  overflow: auto;
+
 }
 
+::v-deep .el-tabs {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+  .el-tabs__content {
+    flex: 1;
+    overflow: auto;
+  }
+}
 </style>

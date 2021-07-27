@@ -94,7 +94,7 @@ public class KafkaTable extends AbstractTable implements TranslatableTable, Clos
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         if (implementor.getLimit() != null) {
-            props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, implementor.getLimit());
+            props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, implementor.getLimit().intValue());
         }
         return new KafkaConsumer<>(props);
     }
