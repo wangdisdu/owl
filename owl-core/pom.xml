@@ -20,25 +20,25 @@
 
         <dependency>
             <groupId>com.owl</groupId>
-            <artifactId>elasticsearch</artifactId>
+            <artifactId>owl-elasticsearch</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.owl</groupId>
-            <artifactId>jdbc</artifactId>
+            <artifactId>owl-jdbc</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.owl</groupId>
-            <artifactId>kafka</artifactId>
+            <artifactId>owl-kafka</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.owl</groupId>
-            <artifactId>mongodb</artifactId>
+            <artifactId>owl-mongodb</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

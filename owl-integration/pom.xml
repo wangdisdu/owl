@@ -11,10 +11,10 @@
     <artifactId>owl-integration</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>elasticsearch</module>
-        <module>kafka</module>
-        <module>jdbc</module>
-        <module>mongodb</module>
+        <module>owl-elasticsearch</module>
+        <module>owl-kafka</module>
+        <module>owl-jdbc</module>
+        <module>owl-mongodb</module>
     </modules>
 
 </project>

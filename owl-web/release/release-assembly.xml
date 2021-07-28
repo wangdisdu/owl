@@ -2,7 +2,6 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
           http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-    <!-- Assembles a packaged version targeting OS installation. -->
     <id>release</id>
     <formats>
         <format>dir</format>
@@ -12,7 +11,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/release/bin</directory>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>owl-${project.version}/bin</outputDirectory>
             <includes>
                 <include>start.sh</include>
                 <include>stop.sh</include>
@@ -20,35 +19,35 @@
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/release/conf</directory>
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>owl-${project.version}/conf</outputDirectory>
             <includes>
                 <include>logback-spring.xml</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/release/db</directory>
-            <outputDirectory>db</outputDirectory>
+            <outputDirectory>owl-${project.version}/db</outputDirectory>
             <includes>
                 <include>README.md</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>owl-${project.version}/conf</outputDirectory>
             <includes>
                 <include>application.yml</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/target</directory>
+            <outputDirectory>owl-${project.version}/lib</outputDirectory>
             <includes>
                 <include>owl-web-${project.version}-exec.jar</include>
             </includes>
-            <outputDirectory>lib</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/target/lib</directory>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>owl-${project.version}/lib</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>
