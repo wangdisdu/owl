@@ -18,6 +18,7 @@ import java.util.Properties;
 @Integration(
         display = "Elasticsearch",
         description = "Elasticsearch Integration",
+        monitorEnable = true,
         sqlPlaceholder = "SELECT * FROM",
         icon = "Elasticsearch.svg"
 )
@@ -64,11 +65,12 @@ public class ElasticsearchIntegration implements IntegrationBuilder<Elasticsearc
                 ElasticsearchTable table = (ElasticsearchTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
             }
-
+            ElasticsearchStats stats = new ElasticsearchStats(config);
             ElasticsearchConnection result = new ElasticsearchConnection();
             result.setConnection(con);
             result.setSchema(schema.getIntegrationSchema());
             result.setIntegration(this);
+            result.setMetricStats(stats);
             return result;
         } catch (Exception ex) {
             if (con != null) {

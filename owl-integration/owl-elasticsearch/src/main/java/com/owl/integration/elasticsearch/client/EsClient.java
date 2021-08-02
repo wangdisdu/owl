@@ -3,6 +3,7 @@ package com.owl.integration.elasticsearch.client;
 import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.owl.common.JsonUtil;
+import com.owl.integration.elasticsearch.Constants;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
@@ -36,13 +37,13 @@ public class EsClient implements Closeable {
     }
 
     public EsVersion version() {
-        Request request = new Request("GET", "/");
+        Request request = new Request(Constants.GET, "/");
         JsonNode response = performRequest(request);
         return EsVersion.fromString(response.get("version").get("number").asText());
     }
 
     public List<String> indices() {
-        Request request = new Request("GET", "/_alias");
+        Request request = new Request(Constants.GET, "/_alias");
         JsonNode response = performRequest(request);
         Iterator<Map.Entry<String, JsonNode>> iterator = response.fields();
         HashSet<String> indices = new HashSet<>();
@@ -57,7 +58,7 @@ public class EsClient implements Closeable {
     }
 
     public IndexMapping mappings(String index) {
-        Request request = new Request("GET", "/" + index + "/_mappings");
+        Request request = new Request(Constants.GET, "/" + index + "/_mappings");
         JsonNode response = performRequest(request);
         return IndexMapping.fromJson(version, index, response);
     }

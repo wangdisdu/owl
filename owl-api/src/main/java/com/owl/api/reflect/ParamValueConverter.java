@@ -25,6 +25,14 @@ public class ParamValueConverter {
         return (String) convert(DataType.STRING, value);
     }
 
+    public static Double convertDouble(Object value) {
+        return (Double) convert(DataType.DOUBLE, value);
+    }
+
+    public static Long convertLong(Object value) {
+        return (Long) convert(DataType.LONG, value);
+    }
+
     public ParamValueConverter(DataType dataType) {
         switch (dataType) {
             case STRING:

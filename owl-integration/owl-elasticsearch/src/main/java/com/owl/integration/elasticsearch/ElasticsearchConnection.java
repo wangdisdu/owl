@@ -11,6 +11,7 @@ public class ElasticsearchConnection implements IntegrationConnection {
     private Connection connection;
     private IntegrationSchema schema;
     private ElasticsearchIntegration integration;
+    private ElasticsearchStats metricStats;
 
     @Override
     public Connection getConnection() {
@@ -40,6 +41,16 @@ public class ElasticsearchConnection implements IntegrationConnection {
     }
 
     @Override
+    public ElasticsearchStats getMetricStats() {
+        return metricStats;
+    }
+
+    public ElasticsearchConnection setMetricStats(ElasticsearchStats metricStats) {
+        this.metricStats = metricStats;
+        return this;
+    }
+
+    @Override
     public void close() throws IOException {
         if (connection != null) {
             try {
@@ -50,6 +61,9 @@ public class ElasticsearchConnection implements IntegrationConnection {
         }
         if (integration != null) {
             integration.close();
+        }
+        if (metricStats != null) {
+            metricStats.close();
         }
     }
 }

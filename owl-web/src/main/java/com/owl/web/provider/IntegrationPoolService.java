@@ -2,6 +2,7 @@ package com.owl.web.provider;
 
 import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
+import com.owl.api.monitor.Data;
 import com.owl.api.schema.DataFrame;
 import com.owl.api.schema.IntegrationSchema;
 import com.owl.common.JsonUtil;
@@ -31,6 +32,12 @@ public class IntegrationPoolService {
         LoadDataFrameHandler handler = new LoadDataFrameHandler(query);
         connect(integration, handler);
         return handler.getDataFrame();
+    }
+
+    public Data[] metric(TbIntegration integration) {
+        MetricCollectHandler handler = new MetricCollectHandler();
+        connect(integration, handler);
+        return handler.getData();
     }
 
     private IntegrationConnection connect(TbIntegration integration, ConnectionHandler handler) {

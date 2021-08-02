@@ -13,4 +13,5 @@ public @interface Integration {
     String icon() default "";
     String document() default "";
     String sqlPlaceholder() default "";
+    boolean monitorEnable() default false;
 }

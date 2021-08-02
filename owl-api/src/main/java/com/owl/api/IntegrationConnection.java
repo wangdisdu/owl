@@ -11,4 +11,8 @@ public interface IntegrationConnection extends Closeable {
     IntegrationSchema getSchema();
 
     IntegrationBuilder getIntegration();
+
+    default MetricStats getMetricStats() {
+        return null;
+    }
 }

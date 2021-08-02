@@ -2,6 +2,7 @@ package com.owl.integration.elasticsearch.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.owl.common.JsonUtil;
+import com.owl.integration.elasticsearch.Constants;
 import com.owl.integration.elasticsearch.client.request.SearchRequest;
 import com.owl.integration.elasticsearch.client.response.SearchResponse;
 import org.elasticsearch.client.Request;
@@ -32,7 +33,7 @@ public class IndexClient implements Closeable {
     }
 
     public SearchResponse search(SearchRequest search) {
-        Request request = new Request("POST", "/" + index + "/_search");
+        Request request = new Request(Constants.POST, "/" + index + "/_search");
         try {
             Map<String, Object> dsl = search.build();
             String requestJson = JsonUtil.encode(dsl);

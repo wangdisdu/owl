@@ -1,13 +1,12 @@
 server:
   port: 8808
 owl:
+  # owl home dir
   home: ${OWL_HOME:owl}
 spring:
   datasource:
     # JDBC连接串
     url: jdbc:sqlite:${owl.home}/db/owl_db.sqlite
-    # 驱动类
-    driver-class-name: org.sqlite.JDBC
     # JDBC用户
     username:
     # JDBC密码

@@ -23,7 +23,7 @@ public interface IServiceExtend<T> extends IService<T> {
         return getById(id, false, true);
     }
 
-    default T notExists(Serializable id) {
-        return getById(id, true, false);
+    default void notExists(Serializable id) {
+        getById(id, true, false);
     }
 }

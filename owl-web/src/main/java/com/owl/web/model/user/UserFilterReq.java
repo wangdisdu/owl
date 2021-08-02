@@ -4,11 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.owl.web.dao.entity.TbUser;
 import com.owl.web.model.CommonFilter;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 public class UserFilterReq extends CommonFilter<TbUser> {
     private String account;
     private String search;
@@ -28,5 +24,50 @@ public class UserFilterReq extends CommonFilter<TbUser> {
                         .or().like(TbUser::getEmail, escapeLike(search))
                         .or().like(TbUser::getPhone, escapeLike(search)));
         return wrapper;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public UserFilterReq setAccount(String account) {
+        this.account = account;
+        return this;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public UserFilterReq setSearch(String search) {
+        this.search = search;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UserFilterReq setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserFilterReq setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserFilterReq setPhone(String phone) {
+        this.phone = phone;
+        return this;
     }
 }
