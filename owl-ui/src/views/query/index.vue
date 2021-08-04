@@ -63,7 +63,7 @@
                     element-loading-text="Loading"
                     border
                     fit
-                    highlight-current-row>
+                    highlight-current-row
                   >
                     <el-table-column v-for="(column, k) in columns" :key="k" :label="column.name">
                       <template slot-scope="scope">
@@ -83,10 +83,7 @@
                   />
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="Log">
-              </el-tab-pane>
-              <el-tab-pane label="History">
-              </el-tab-pane>
+              <el-tab-pane label="History" />
             </el-tabs>
           </div>
         </div>
@@ -157,8 +154,8 @@ export default {
   },
   methods: {
     loadData() {
-      // 通过路由名删除前缀'integration-'，得到id
-      const id = this.$route.name.substring(12)
+      // 通过路由名删除前缀'query-'，得到id
+      const id = this.$route.name.substring(6)
 
       this.connectLoading = true
       integrationAPI.schema(id).then(response => {
@@ -208,7 +205,6 @@ export default {
         sql: this.editor.getValue()
       }
       this.tableLoading = true
-     
       integrationAPI.query(data).then(response => {
         this.columns = response.result.columns
         this.rows = response.result.rows

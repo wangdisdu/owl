@@ -1,6 +1,7 @@
 package com.owl.integration.elasticsearch.monitor;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.owl.api.monitor.Category;
 import com.owl.api.monitor.Instance;
 import com.owl.api.monitor.Time;
 import com.owl.api.monitor.Value;
@@ -10,6 +11,8 @@ public class ClusterStats {
     private long timestamp;
     @Instance
     private String name;
+    @Category
+    private String category = "cluster";
     @Value
     private int clusterStatus;
     @Value
@@ -63,6 +66,15 @@ public class ClusterStats {
 
     public ClusterStats setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public ClusterStats setCategory(String category) {
+        this.category = category;
         return this;
     }
 

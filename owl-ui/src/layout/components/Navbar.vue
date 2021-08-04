@@ -7,7 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <svg-icon icon-class="avatar" class="user-avatar"/>
+          <svg-icon icon-class="avatar" class="user-avatar" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <el-dropdown-item>
@@ -26,7 +26,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import userAPI from '@/api/user.js';
+import userAPI from '@/api/user.js'
 
 export default {
   components: {

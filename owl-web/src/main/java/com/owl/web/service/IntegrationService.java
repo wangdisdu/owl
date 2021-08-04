@@ -1,10 +1,13 @@
 package com.owl.web.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.owl.api.annotation.IntegrationMeta;
 import com.owl.api.schema.DataFrame;
 import com.owl.api.schema.IntegrationSchema;
 import com.owl.web.common.ContextHolder;
+import com.owl.web.dao.entity.TbHistory;
 import com.owl.web.dao.entity.TbIntegration;
+import com.owl.web.dao.service.TbHistoryService;
 import com.owl.web.dao.service.TbIntegrationService;
 import com.owl.web.model.integration.IntegrationQuery;
 import com.owl.web.model.integration.IntegrationReq;
@@ -21,6 +24,8 @@ import java.util.stream.Collectors;
 public class IntegrationService {
     @Autowired
     private TbIntegrationService tbIntegrationService;
+    @Autowired
+    private TbHistoryService tbHistoryService;
     @Autowired
     private IntegrationPoolService integrationPoolService;
     @Autowired
@@ -47,7 +52,7 @@ public class IntegrationService {
 
     public IntegrationResp delete(String name) {
         IntegrationResp resp = get(name);
-        tbIntegrationService.removeById(name);
+        clear(name);
         return resp;
     }
 
@@ -81,5 +86,14 @@ public class IntegrationService {
     public IntegrationSchema schema(String name) {
         TbIntegration entity = tbIntegrationService.exists(name);
         return integrationPoolService.schema(entity);
+    }
+
+    public void clear(String name) {
+        tbHistoryService.remove(
+                new LambdaQueryWrapper<TbHistory>()
+                        .eq(TbHistory::getIntegrationName, name));
+        tbIntegrationService.remove(
+                new LambdaQueryWrapper<TbIntegration>()
+                        .eq(TbIntegration::getName, name));
     }
 }

@@ -2,6 +2,7 @@ package com.owl.integration.elasticsearch.monitor;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.owl.api.monitor.Category;
 import com.owl.api.monitor.Host;
 import com.owl.api.monitor.Instance;
 import com.owl.api.monitor.Time;
@@ -17,6 +18,8 @@ public class NodeStats {
     private String id;
     @Instance
     private String name;
+    @Category
+    private String category = "node";
     @Host
     private String host;
     @Value
@@ -129,6 +132,15 @@ public class NodeStats {
 
     public NodeStats setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public NodeStats setCategory(String category) {
+        this.category = category;
         return this;
     }
 

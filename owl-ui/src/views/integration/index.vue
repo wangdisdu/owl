@@ -24,6 +24,7 @@
           </div>
           <div class="card-bottom">
             <el-button-group>
+              <el-button v-if="integration.meta.monitorEnable" icon="el-icon-data-line" size="mini" @click="toMonitor(integration.name)" />
               <el-button icon="el-icon-search" size="mini" @click="toQuery(integration.name)" />
               <el-button icon="el-icon-edit" size="mini" @click="toEdit(integration.name)" />
               <el-popconfirm
@@ -69,11 +70,14 @@ export default {
     this.fetchData()
   },
   methods: {
+    toQuery(name) {
+      this.$router.push('/query/' + name)
+    },
+    toMonitor(name) {
+      this.$router.push('/monitor/' + name)
+    },
     toCreate() {
       this.$router.push('/integration/create')
-    },
-    toQuery(name) {
-      this.$router.push('/integration-' + name + '/index')
     },
     toEdit(name) {
       this.$router.push('/integration/edit/' + name)
@@ -127,12 +131,14 @@ export default {
 
 .card-header {
   padding: 10px 18px;
+  background: #f5f7fa;
   border-bottom: 1px solid #ebeef5;
 
   .card-name {
     height: 32px;
     line-height: 30px;
     font-size: 16px;
+    color: #333;
   }
 
   .card-tag {

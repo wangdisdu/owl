@@ -23,6 +23,7 @@ public class DataUtil {
         Field[] fields = ReflectUtil.getFields(clazz);
         Long time = null;
         String instance = null;
+        String category = null;
         String host = null;
         List<String> tags = new ArrayList<>();
         for (Field field : fields) {
@@ -47,6 +48,11 @@ public class DataUtil {
                         ReflectUtil.getFieldValue(obj, field)
                 );
             }
+            if (field.getAnnotation(Category.class) != null) {
+                category = ParamValueConverter.convertString(
+                        ReflectUtil.getFieldValue(obj, field)
+                );
+            }
             if (field.getAnnotation(Host.class) != null) {
                 host = ParamValueConverter.convertString(
                         ReflectUtil.getFieldValue(obj, field)
@@ -64,6 +70,9 @@ public class DataUtil {
             }
             if (instance != null) {
                 data.setInstance(instance);
+            }
+            if (category != null) {
+                data.setCategory(category);
             }
             if (host != null) {
                 data.setHost(host);

@@ -9,6 +9,7 @@ public class IntegrationMeta {
     private String icon;
     private String document;
     private String sqlPlaceholder;
+    private Boolean monitorEnable;
     private List<ParameterMeta> parameters;
 
     public String getBuilder() {
@@ -57,6 +58,15 @@ public class IntegrationMeta {
 
     public void setSqlPlaceholder(String sqlPlaceholder) {
         this.sqlPlaceholder = sqlPlaceholder;
+    }
+
+    public Boolean getMonitorEnable() {
+        return monitorEnable;
+    }
+
+    public IntegrationMeta setMonitorEnable(Boolean monitorEnable) {
+        this.monitorEnable = monitorEnable;
+        return this;
     }
 
     public List<ParameterMeta> getParameters() {

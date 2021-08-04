@@ -25,7 +25,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // if the custom code is not 0000, it is judged as an error.
-    if (res.retCode !== "0000") {
+    if (res.retCode !== '0000') {
       Message({
         message: res.retMsg || 'Error',
         type: 'error',

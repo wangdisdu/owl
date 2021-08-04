@@ -11,6 +11,7 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
     private String guid;
     private String metric;
     private String instance;
+    private String category;
     private String host;
     private String tag1;
     private String tag2;
@@ -27,12 +28,14 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
                 .eq(StrUtil.isNotEmpty(guid), TbHistory::getGuid, guid)
                 .eq(StrUtil.isNotEmpty(metric), TbHistory::getMetric, metric)
                 .eq(StrUtil.isNotEmpty(instance), TbHistory::getInstance, instance)
+                .eq(StrUtil.isNotEmpty(category), TbHistory::getCategory, category)
                 .eq(StrUtil.isNotEmpty(host), TbHistory::getHost, host)
                 .eq(StrUtil.isNotEmpty(tag1), TbHistory::getTag1, tag1)
                 .eq(StrUtil.isNotEmpty(tag2), TbHistory::getTag2, tag2)
                 .eq(StrUtil.isNotEmpty(tag3), TbHistory::getTag3, tag3)
                 .eq(StrUtil.isNotEmpty(tag4), TbHistory::getTag4, tag4)
-                .eq(StrUtil.isNotEmpty(tag5), TbHistory::getTag5, tag5);
+                .eq(StrUtil.isNotEmpty(tag5), TbHistory::getTag5, tag5)
+                .eq(StrUtil.isNotEmpty(integrationName), TbHistory::getIntegrationName, integrationName);
         return wrapper;
     }
 
@@ -78,6 +81,15 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
 
     public HistoryFilterReq setInstance(String instance) {
         this.instance = instance;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public HistoryFilterReq setCategory(String category) {
+        this.category = category;
         return this;
     }
 

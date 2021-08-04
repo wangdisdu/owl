@@ -35,13 +35,13 @@ export const constantRoutes = [
       name: 'Integration',
       component: () => import('@/views/integration/index'),
       meta: { title: 'Integration', icon: 'integration' }
-    },{
+    }, {
       path: '/integration/create',
       name: 'IntegrationCreate',
       component: () => import('@/views/integration/create'),
       meta: { activeMenu: '/integration' },
       hidden: true
-    },{
+    }, {
       path: '/integration/edit/:id',
       name: 'IntegrationEdit',
       component: () => import('@/views/integration/edit'),
@@ -55,8 +55,7 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
-  },
-
+  }
 ]
 
 export const tailRoutes = [

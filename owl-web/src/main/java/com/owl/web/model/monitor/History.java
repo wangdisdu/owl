@@ -10,6 +10,7 @@ public class History {
     private String guid;
     private String metric;
     private String instance;
+    private String category;
     private String host;
     private String tag1;
     private String tag2;
@@ -75,6 +76,15 @@ public class History {
 
     public History setInstance(String instance) {
         this.instance = instance;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public History setCategory(String category) {
+        this.category = category;
         return this;
     }
 

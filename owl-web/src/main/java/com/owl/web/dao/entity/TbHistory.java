@@ -14,6 +14,8 @@ public class TbHistory {
     @TableField
     private String instance;
     @TableField
+    private String category;
+    @TableField
     private String host;
     @TableField
     private String tag1;
@@ -70,6 +72,15 @@ public class TbHistory {
 
     public TbHistory setInstance(String instance) {
         this.instance = instance;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public TbHistory setCategory(String category) {
+        this.category = category;
         return this;
     }
 
