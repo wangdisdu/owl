@@ -30,12 +30,19 @@ public class DataUtil {
             Value va = field.getAnnotation(Value.class);
             if (va != null) {
                 Data data = new Data();
-                data.setValue(ParamValueConverter.convertDouble(
+                String name = va.name();
+                if (StrUtil.isEmpty(name)) {
+                    name = CharSequenceUtil.toUnderlineCase(field.getName());
+                }
+                String alias = va.alias();
+                String unit = va.unit();
+                Double value = ParamValueConverter.convertDouble(
                         ReflectUtil.getFieldValue(obj, field)
-                ));
-                data.setMetric(
-                        CharSequenceUtil.toUnderlineCase(field.getName())
                 );
+                data.setMetric(name);
+                data.setAlias(alias);
+                data.setUnit(unit);
+                data.setValue(value);
                 result.add(data);
             }
             if (field.getAnnotation(Time.class) != null) {

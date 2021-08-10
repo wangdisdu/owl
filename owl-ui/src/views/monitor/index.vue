@@ -62,7 +62,7 @@
               CPU使用
             </span>
             <span v-if="cluster_metrics.cpu_percent" class="overview-text">
-              {{ cluster_metrics.cpu_percent.value }} %
+              {{ humanReadable(cluster_metrics.cpu_percent.value, 'percent') }}
             </span>
           </div>
         </el-col>
@@ -71,8 +71,8 @@
             <span class="overview-name">
               内存使用
             </span>
-            <span v-if="cluster_metrics.mem_used_bytes" class="overview-text">
-              {{ humanBytes(cluster_metrics.mem_used_bytes.value) }}
+            <span v-if="cluster_metrics.heap_used_percent" class="overview-text">
+              {{ humanReadable(cluster_metrics.heap_used_percent.value, 'percent') }}
             </span>
           </div>
         </el-col>
@@ -82,7 +82,7 @@
               存储使用
             </span>
             <span v-if="cluster_metrics.store_bytes" class="overview-text">
-              {{ humanBytes(cluster_metrics.store_bytes.value) }}
+              {{ humanReadable(cluster_metrics.store_bytes.value, 'bytes') }}
             </span>
           </div>
         </el-col>
@@ -104,7 +104,7 @@
               索引数量
             </span>
             <span v-if="cluster_metrics.indices_count" class="overview-text">
-              {{ cluster_metrics.indices_count.value }}
+              {{ humanReadable(cluster_metrics.indices_count.value, 'count') }}
             </span>
           </div>
         </el-col>
@@ -114,7 +114,7 @@
               数据总量
             </span>
             <span v-if="cluster_metrics.docs_count" class="overview-text">
-              {{ humanNumber(cluster_metrics.docs_count.value) }}
+              {{ humanReadable(cluster_metrics.docs_count.value, 'count') }}
             </span>
           </div>
         </el-col>
@@ -124,7 +124,7 @@
               磁盘剩余
             </span>
             <span v-if="cluster_metrics.fs_free_bytes" class="overview-text">
-              {{ humanBytes(cluster_metrics.fs_free_bytes.value) }}
+              {{ humanReadable(cluster_metrics.fs_free_bytes.value, 'bytes') }}
             </span>
           </div>
         </el-col>
@@ -161,7 +161,7 @@
               CPU使用
             </span>
             <span v-if="node_metrics.cpu_percent" class="overview-text">
-              {{ node_metrics.cpu_percent.value }} %
+              {{ humanReadable(node_metrics.cpu_percent.value, 'percent') }}
             </span>
           </div>
         </el-col>
@@ -170,8 +170,8 @@
             <span class="overview-name">
               内存使用
             </span>
-            <span v-if="node_metrics.mem_used_bytes" class="overview-text">
-              {{ humanBytes(node_metrics.mem_used_bytes.value) }}
+            <span v-if="node_metrics.heap_used_percent" class="overview-text">
+              {{ humanReadable(node_metrics.heap_used_percent.value, 'percent') }}
             </span>
           </div>
         </el-col>
@@ -181,7 +181,7 @@
               存储使用
             </span>
             <span v-if="node_metrics.store_bytes" class="overview-text">
-              {{ humanBytes(node_metrics.store_bytes.value) }}
+              {{ humanReadable(node_metrics.store_bytes.value, 'bytes') }}
             </span>
           </div>
         </el-col>
@@ -200,20 +200,20 @@
         <el-col :span="6" class="overview-col">
           <div class="overview-item">
             <span class="overview-name">
-              数据总量
+              cpu负载
             </span>
-            <span v-if="node_metrics.docs_count" class="overview-text">
-              {{ humanNumber(node_metrics.docs_count.value) }}
+            <span v-if="node_metrics.index_total" class="overview-text">
+              {{ node_metrics.cpu_load.value }}
             </span>
           </div>
         </el-col>
         <el-col :span="6" class="overview-col">
           <div class="overview-item">
             <span class="overview-name">
-              内存占比
+              数据总量
             </span>
-            <span v-if="node_metrics.mem_percent" class="overview-text">
-              {{ node_metrics.mem_percent.value }} %
+            <span v-if="node_metrics.docs_count" class="overview-text">
+              {{ humanReadable(node_metrics.docs_count.value, 'count') }}
             </span>
           </div>
         </el-col>
@@ -223,49 +223,7 @@
               存储剩余
             </span>
             <span v-if="node_metrics.fs_free_bytes" class="overview-text">
-              {{ humanBytes(node_metrics.fs_free_bytes.value) }}
-            </span>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" class="overview-row">
-        <el-col :span="6" class="overview-col">
-          <div class="overview-item">
-            <span class="overview-name">
-              写入总量
-            </span>
-            <span v-if="node_metrics.index_total" class="overview-text">
-              {{ humanNumber(node_metrics.index_total.value) }}
-            </span>
-          </div>
-        </el-col>
-        <el-col :span="6" class="overview-col">
-          <div class="overview-item">
-            <span class="overview-name">
-              查询总量
-            </span>
-            <span v-if="node_metrics.query_total" class="overview-text">
-              {{ humanNumber(node_metrics.query_total.value) }}
-            </span>
-          </div>
-        </el-col>
-        <el-col :span="6" class="overview-col">
-          <div class="overview-item">
-            <span class="overview-name">
-              查询阻塞
-            </span>
-            <span v-if="node_metrics.search_queue" class="overview-text">
-              {{ node_metrics.search_queue.value }}
-            </span>
-          </div>
-        </el-col>
-        <el-col :span="6" class="overview-col">
-          <div class="overview-item">
-            <span class="overview-name">
-              写入阻塞
-            </span>
-            <span v-if="node_metrics.write_queue" class="overview-text">
-              {{ node_metrics.write_queue.value }}
+              {{ humanReadable(node_metrics.fs_free_bytes.value, 'bytes') }}
             </span>
           </div>
         </el-col>
@@ -289,7 +247,7 @@
 
 <script>
 import monitorAPI from '@/api/monitor.js'
-import { humanBytes, humanNumber } from '@/utils'
+import { humanReadable } from '@/utils'
 import { groupBy, forEach, forIn } from 'lodash'
 import linechart from './linechart'
 
@@ -303,7 +261,7 @@ export default {
       id: '',
       drawer: false,
       loading: false,
-      timeRange: [new Date().getTime() - 3600 * 1000, new Date().getTime()],
+      timeRange: [new Date().getTime() - 24 * 3600 * 1000, new Date().getTime()],
       pickerOptions: {
         shortcuts: [{
           text: '最近1小时',
@@ -352,15 +310,12 @@ export default {
     this.fetchData()
   },
   methods: {
-    humanBytes: humanBytes,
-    humanNumber: humanNumber,
+    humanReadable: humanReadable,
     fetchData() {
       // 通过路由名删除前缀'monitor-'，得到id
       const id = this.$route.name.substring(8)
       this.id = id
       this.fetchMetric()
-      this.renderClusterChart()
-      this.renderNodesChart()
     },
     fetchMetric() {
       this.loading = true
@@ -381,6 +336,7 @@ export default {
         })
         this.cluster_metrics = cluster_metrics
         this.nodes_metrics = nodes_metrics
+        this.renderClusterChart()
         this.renderNodesChart()
       }).catch(() => {
       }).finally(() => {
@@ -406,179 +362,58 @@ export default {
       }
     },
     renderClusterChart() {
+      const _this = this
       const id = this.id
-      this.cluster_charts.push({
-        visible: true,
-        title: 'CPU使用',
-        type: 'percent',
-        color: '#409eff',
-        reqId: id,
-        reqBody: { filter: { metric: 'cpu_percent', category: 'cluster', timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      })
-      this.cluster_charts.push({
-        visible: true,
-        title: '内存使用',
-        type: 'bytes',
-        color: '#409eff',
-        reqId: id,
-        reqBody: { filter: { metric: 'mem_used_bytes', category: 'cluster', timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      })
-      this.cluster_charts.push({
-        visible: false,
-        title: '存储使用',
-        type: 'bytes',
-        color: '#409eff',
-        reqId: id,
-        reqBody: { filter: { metric: 'store_bytes', category: 'cluster', timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      })
-      this.cluster_charts.push({
-        visible: false,
-        title: '磁盘剩余',
-        type: 'bytes',
-        color: '#409eff',
-        reqId: id,
-        reqBody: { filter: { metric: 'fs_free_bytes', category: 'cluster', timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      })
-      this.cluster_charts.push({
-        visible: false,
-        title: '数据总量',
-        type: 'count',
-        color: '#409eff',
-        reqId: id,
-        reqBody: { filter: { metric: 'docs_count', category: 'cluster', timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
+      const timeRange = this.timeRange
+      const cluster_metrics = this.cluster_metrics
+      forIn(cluster_metrics, function(metric, key) {
+        const visible = metric.metric === 'cpu_percent' || metric.metric === 'heap_used_percent'
+        _this.cluster_charts.push({
+          visible: visible,
+          title: metric.instance + "-" + metric.alias,
+          unit: metric.unit,
+          color: '#409eff',
+          reqId: id,
+          reqBody: { 
+            filter: {
+              metric: metric.metric,
+              category: metric.category,
+              timeFrom: timeRange[0],
+              timeTo: timeRange[1]
+            }
+          }
+        })
       })
     },
     renderNodesChart() {
+      const _this = this
       const id = this.id
+      const timeRange = this.timeRange
       const nodes_metrics = this.nodes_metrics
-      for (var i = 0, len = nodes_metrics.length; i < len; i++) {
-        const node_metrics = nodes_metrics[i]
-        const instance = node_metrics.cpu_percent.instance
-        this.renderNodeChart(id, instance)
-      }
-    },
-    renderNodeChart(id, instance) {
-      const node_charts = [{
-        visible: true,
-        title: instance + ' / CPU使用',
-        type: 'percent',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'cpu_percent', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: true,
-        title: instance + ' / 内存占比',
-        type: 'percent',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'mem_percent', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 内存使用',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'mem_used_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / fielddata缓存',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'fielddata_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 查询缓存',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'query_cache_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 请求缓存',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'request_cache_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 存储使用',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'store_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 磁盘剩余',
-        type: 'bytes',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'fs_free_bytes', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 数据总量',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'docs_count', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / YoungGC次数',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'young_gc_count', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / YoungGC耗时',
-        type: 'ms',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'young_gc_ms', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / OldGC次数',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'old_gc_count', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / OldGC耗时',
-        type: 'ms',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'old_gc_ms', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 写入总量',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'index_total', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 查询总量',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'query_total', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 查询阻塞',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'search_queue', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }, {
-        visible: false,
-        title: instance + ' / 写入阻塞',
-        type: 'count',
-        color: '#67c23a',
-        reqId: id,
-        reqBody: { filter: { metric: 'write_queue', category: 'node', instance: instance, timeFrom: this.timeRange[0], timeTo: this.timeRange[1] }}
-      }]
-      this.nodes_charts.push(node_charts)
+      forEach(nodes_metrics, function(node_metrics) {
+        const node_charts = []
+        forIn(node_metrics, function(metric, key) {
+          const visible = metric.metric === 'cpu_percent' || metric.metric === 'heap_used_percent'
+          const title = metric.instance + "-" + metric.alias
+          node_charts.push({
+            visible: visible,
+            title: metric.instance + "-" + metric.alias,
+            unit: metric.unit,
+            color: '#67c23a',
+            reqId: id,
+            reqBody: { 
+              filter: {
+                metric: metric.metric,
+                category: metric.category,
+                instance: metric.instance,
+                timeFrom: timeRange[0],
+                timeTo: timeRange[1]
+              }
+            }
+          })
+        })
+        _this.nodes_charts.push(node_charts)
+      })
     }
   }
 }

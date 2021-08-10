@@ -28,6 +28,10 @@ public class TbHistory {
     @TableField
     private String tag5;
     @TableField
+    private String alias;
+    @TableField
+    private String unit;
+    @TableField
     private String integrationName;
 
     public Long getTime() {
@@ -135,6 +139,24 @@ public class TbHistory {
 
     public TbHistory setTag5(String tag5) {
         this.tag5 = tag5;
+        return this;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public TbHistory setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public TbHistory setUnit(String unit) {
+        this.unit = unit;
         return this;
     }
 

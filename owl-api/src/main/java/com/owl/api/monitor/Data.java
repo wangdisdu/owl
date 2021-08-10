@@ -13,6 +13,8 @@ public class Data {
     private String tag3;
     private String tag4;
     private String tag5;
+    private String alias;
+    private String unit;
 
     public Long getTime() {
         return time;
@@ -119,6 +121,24 @@ public class Data {
 
     public Data setTag5(String tag5) {
         this.tag5 = tag5;
+        return this;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public Data setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public Data setUnit(String unit) {
+        this.unit = unit;
         return this;
     }
 }

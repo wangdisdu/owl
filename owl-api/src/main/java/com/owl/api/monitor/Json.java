@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Value {
-    String name() default "";
-    String alias() default "";
-    String unit() default "";
+public @interface Json {
+    boolean required() default true;
+    String[] path() default {};
+    String[] path2() default {};
 }

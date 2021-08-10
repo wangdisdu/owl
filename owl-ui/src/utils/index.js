@@ -116,29 +116,45 @@ export function param2Obj(url) {
   return obj
 }
 
+export function humanReadable(value, unit) {
+  if (unit === 'percent') {
+    return value + '%'
+  } else if (unit === 'count') {
+    return humanCount(value)
+  } else if (unit === 'ms') {
+    return humanMs(value)
+  } else if (unit === 'bytes') {
+    return humanBytes(value)
+  } else if (unit === 'kilobytes') {
+    return humanKiloBytes(value)
+  } else {
+    return value
+  }
+}
+
 /**
- * Format number as human-readable text.
+ * Format count as human-readable text.
  * @param bytes Number.
  * @returns Formatted string.
  */
-export function humanNumber(number) {
-  if (Math.abs(number) < 10000) {
-    return number + ''
+export function humanCount(count) {
+  if (Math.abs(count) < 10000) {
+    return count + ''
   }
   const dp = 1
   const units = ['万', '亿', '万亿']
   let u = -1
   const r = 10 ** dp
   do {
-    number /= 10000
+    count /= 10000
     ++u
-  } while (Math.round(Math.abs(number) * r) / r >= 10000 && u < units.length - 1)
-  return number.toFixed(dp) + ' ' + units[u]
+  } while (Math.round(Math.abs(count) * r) / r >= 10000 && u < units.length - 1)
+  return count.toFixed(dp) + ' ' + units[u]
 }
 
 /**
- * Format number as human-readable text.
- * @param bytes Number.
+ * Format milliseconds as human-readable text.
+ * @param milliseconds.
  * @returns Formatted string.
  */
 export function humanMs(ms) {
@@ -179,4 +195,24 @@ export function humanBytes(bytes) {
     ++u
   } while (Math.round(Math.abs(bytes) * r) / r >= 1024 && u < units.length - 1)
   return bytes.toFixed(dp) + ' ' + units[u]
+}
+
+/**
+ * Format kilobytes as human-readable text.
+ * @param kilobytes Number of kilobytes.
+ * @returns Formatted string.
+ */
+export function humanKiloBytes(kb) {
+  if (Math.abs(kb) < 1024) {
+    return kb + ' kB'
+  }
+  const dp = 1
+  const units = ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  let u = -1
+  const r = 10 ** dp
+  do {
+    kb /= 1024
+    ++u
+  } while (Math.round(Math.abs(kb) * r) / r >= 1024 && u < units.length - 1)
+  return kb.toFixed(dp) + ' ' + units[u]
 }

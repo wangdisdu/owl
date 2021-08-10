@@ -41,6 +41,8 @@ CREATE TABLE `tb_history` (
   `tag3` varchar(255) DEFAULT NULL,
   `tag4` varchar(255) DEFAULT NULL,
   `tag5` varchar(255) DEFAULT NULL,
+  `alias` varchar(255) DEFAULT NULL,
+  `unit` varchar(255) DEFAULT NULL,
   `integration_name` varchar(255) DEFAULT NULL
 );
 

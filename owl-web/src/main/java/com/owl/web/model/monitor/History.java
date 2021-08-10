@@ -17,6 +17,8 @@ public class History {
     private String tag3;
     private String tag4;
     private String tag5;
+    private String alias;
+    private String unit;
     private String integrationName;
 
     public History copyFrom(TbHistory entity) {
@@ -139,6 +141,24 @@ public class History {
 
     public History setTag5(String tag5) {
         this.tag5 = tag5;
+        return this;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public History setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public History setUnit(String unit) {
+        this.unit = unit;
         return this;
     }
 
