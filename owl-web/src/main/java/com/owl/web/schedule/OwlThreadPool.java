@@ -8,12 +8,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class OwlThreadPool {
 
-    @Bean("OwlMetricCollectPool")
-    public AsyncTaskExecutor metricCollectPool() {
+    @Bean("OwlMonitorMetricCollectPool")
+    public AsyncTaskExecutor owlMonitorMetricCollectPool() {
+        int cores = Runtime.getRuntime().availableProcessors();
+        cores = Math.max(cores, 2);
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setThreadNamePrefix("OwlMetricCollectPool");
-        taskExecutor.setCorePoolSize(1);
-        taskExecutor.setMaxPoolSize(1);
+        taskExecutor.setThreadNamePrefix("OwlMonitorMetricCollect");
+        taskExecutor.setCorePoolSize(cores);
+        taskExecutor.setMaxPoolSize(cores * 4);
         taskExecutor.setQueueCapacity(0);
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         taskExecutor.setAwaitTerminationSeconds(60);

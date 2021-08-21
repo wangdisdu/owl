@@ -1,8 +1,12 @@
 # owl
 
-## Awesome Sql Tool
+## Awesome Sql & Monitor Tool
 
-owl is a sql tool for Apache Kafka, Elasticsearch, Mongodb, Redis, JDBC and so on.
+SQL Tool: Elasticsearch, Kafka, MongoDb, ClickHouse, Mysql, Oracle, SqlServer, Db2, Vertica and Jdbc
 
-![sql](https://github.com/wangdisdu/owl/raw/master/doc/sqleditor.png)
+Monitor Tool: Elasticsearch, Kafka
+
 ![sql](https://gitee.com/wangdisdu/owl/raw/master/doc/sqleditor.png)
+
+![monitor](https://gitee.com/wangdisdu/owl/raw/master/doc/monitor1.jpg)
+![monitor](https://gitee.com/wangdisdu/owl/raw/master/doc/monitor2.jpg)

@@ -34,7 +34,7 @@ public class OwlSchedule {
     @Autowired
     private IntegrationPoolService integrationPoolService;
 
-    @Async("OwlMetricCollectPool")
+    @Async("OwlMonitorMetricCollectPool")
     @Scheduled(cron = "0 0/5 * * * ?")
     public void integrationMetric() {
         List<TbIntegration> list = tbIntegrationService.list();
