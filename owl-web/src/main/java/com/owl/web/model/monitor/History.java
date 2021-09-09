@@ -1,6 +1,6 @@
 package com.owl.web.model.monitor;
 
-import com.owl.api.monitor.Data;
+import com.owl.api.monitor.Metric;
 import com.owl.web.dao.entity.TbHistory;
 import org.springframework.beans.BeanUtils;
 
@@ -19,15 +19,14 @@ public class History {
     private String tag5;
     private String alias;
     private String unit;
-    private String integrationName;
 
     public History copyFrom(TbHistory entity) {
         BeanUtils.copyProperties(entity, this);
         return this;
     }
 
-    public History copyFrom(Data data) {
-        BeanUtils.copyProperties(data, this);
+    public History copyFrom(Metric metric) {
+        BeanUtils.copyProperties(metric, this);
         return this;
     }
 
@@ -159,15 +158,6 @@ public class History {
 
     public History setUnit(String unit) {
         this.unit = unit;
-        return this;
-    }
-
-    public String getIntegrationName() {
-        return integrationName;
-    }
-
-    public History setIntegrationName(String integrationName) {
-        this.integrationName = integrationName;
         return this;
     }
 }

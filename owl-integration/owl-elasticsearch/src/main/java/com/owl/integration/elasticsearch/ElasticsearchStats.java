@@ -1,8 +1,8 @@
 package com.owl.integration.elasticsearch;
 
 import com.owl.api.MetricStats;
-import com.owl.api.monitor.Data;
-import com.owl.api.monitor.DataUtil;
+import com.owl.api.monitor.Metric;
+import com.owl.api.monitor.MetricUtil;
 import com.owl.integration.elasticsearch.monitor.ClusterStats;
 import com.owl.integration.elasticsearch.monitor.ElasticsearchMonitor;
 import com.owl.integration.elasticsearch.monitor.NodeStats;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class ElasticsearchStats implements MetricStats {
     private final ElasticsearchConfig config;
     private final ElasticsearchMonitor monitor;
+    private Metric[] last = new Metric[0];
 
     public ElasticsearchStats(ElasticsearchConfig config) throws IOException {
         this.config = config;
@@ -23,43 +24,47 @@ public class ElasticsearchStats implements MetricStats {
     }
 
     @Override
-    public Data[] stats() {
-        List<Data> result = new ArrayList<>();
+    public Metric[] last() {
+        return last;
+    }
+
+    @Override
+    public Metric[] stats() {
+        List<Metric> result = new ArrayList<>();
         ClusterStats clusterStats = monitor.clusterStats();
         NodeStats[] nodeStats = monitor.nodeStats();
         String nodes = Arrays.stream(nodeStats)
                 .map(NodeStats::getHost)
                 .collect(Collectors.joining(","));
-        Data[] clusterData = DataUtil.read(clusterStats);
-        for (Data data : clusterData) {
-            data.setHost(nodes);
-            data.setGuid(DataUtil.genGuid(
-                    data.getMetric(),
+        Metric[] clusterData = MetricUtil.read(clusterStats);
+        for (Metric metric : clusterData) {
+            metric.setHost(nodes);
+            metric.setGuid(MetricUtil.genGuid(
+                    metric.getMetric(),
                     clusterStats.getName()
             ));
-            data.setTag1(clusterStats.getName());
-            result.add(data);
+            metric.setTag1(clusterStats.getName());
+            result.add(metric);
         }
         for (NodeStats node : nodeStats) {
-            Data[] nodeData = DataUtil.read(node);
-            for (Data data : nodeData) {
-                data.setGuid(DataUtil.genGuid(
-                        data.getMetric(),
+            Metric[] nodeData = MetricUtil.read(node);
+            for (Metric metric : nodeData) {
+                metric.setGuid(MetricUtil.genGuid(
+                        metric.getMetric(),
                         clusterStats.getName(),
                         node.getName()
                 ));
-                data.setTag1(clusterStats.getName());
-                data.setTag2(node.getName());
-                result.add(data);
+                metric.setTag1(clusterStats.getName());
+                metric.setTag2(node.getName());
+                result.add(metric);
             }
         }
-        return result.toArray(new Data[0]);
+        last = result.toArray(new Metric[0]);
+        return last;
     }
 
     @Override
     public void close() throws IOException {
-        if (monitor != null) {
-            monitor.close();
-        }
+        monitor.close();
     }
 }

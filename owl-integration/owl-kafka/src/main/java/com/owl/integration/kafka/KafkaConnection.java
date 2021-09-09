@@ -11,6 +11,7 @@ public class KafkaConnection implements IntegrationConnection {
     private Connection connection;
     private IntegrationSchema schema;
     private KafkaIntegration integration;
+    private KafkaStats metricStats;
 
     @Override
     public Connection getConnection() {
@@ -37,6 +38,16 @@ public class KafkaConnection implements IntegrationConnection {
 
     public void setIntegration(KafkaIntegration integration) {
         this.integration = integration;
+    }
+
+    @Override
+    public KafkaStats getMetricStats() {
+        return metricStats;
+    }
+
+    public KafkaConnection setMetricStats(KafkaStats metricStats) {
+        this.metricStats = metricStats;
+        return this;
     }
 
     @Override

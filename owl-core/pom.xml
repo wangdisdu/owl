@@ -19,6 +19,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.owl</groupId>
             <artifactId>owl-elasticsearch</artifactId>
             <version>${project.version}</version>

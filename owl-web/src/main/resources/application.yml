@@ -6,6 +6,7 @@ owl:
 spring:
   datasource:
     # JDBC连接串
+    # sqlite仅作为开发环境使用，生产环境下请使用mysql、oracle等其它合适的数据库
     url: jdbc:sqlite:${owl.home}/db/owl_db.sqlite
     # JDBC用户
     username:
@@ -25,9 +26,9 @@ spring:
       # 池中连接最长生命周期
       max-lifetime: 1800000
       # 连接池中维护的最小空闲连接数
-      minimum-idle: 4
+      minimum-idle: 1
       # 池中最大连接数，包括闲置和使用中的连接
-      maximum-pool-size: 16
+      maximum-pool-size: 1
       # 用来检测连接是否有效，要求是一个查询语句
       connection-test-query: SELECT 1
   flyway:

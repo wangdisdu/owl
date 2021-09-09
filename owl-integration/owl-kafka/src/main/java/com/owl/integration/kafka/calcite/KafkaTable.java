@@ -12,7 +12,6 @@ import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.schema.TranslatableTable;
 import org.apache.calcite.schema.impl.AbstractTable;
 import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -90,7 +89,7 @@ public class KafkaTable extends AbstractTable implements TranslatableTable, Clos
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "OWL-Client");
         Optional.ofNullable(config.getConsumerProperties()).ifPresent(i -> i.forEach(props::put));
-        props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         if (implementor.getLimit() != null) {
@@ -125,8 +124,8 @@ public class KafkaTable extends AbstractTable implements TranslatableTable, Clos
         if (partitions.isEmpty()) {
             return partitions;
         }
-        Map<TopicPartition, Long> beginningOffsets = consumer.beginningOffsets(partitions);
-        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
+        Map<TopicPartition, Long> beginningOffsets = consumer.beginningOffsets(partitions, Duration.ofSeconds(1));
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions, Duration.ofSeconds(1));
         List<TopicPartition> assigns = new ArrayList<>();
         for (TopicPartition partition : partitions) {
             Long from = implementor.getOffsetFrom();
@@ -151,7 +150,7 @@ public class KafkaTable extends AbstractTable implements TranslatableTable, Clos
             }
         }
 
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(10000));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(2));
         for (ConsumerRecord record : records) {
             if (implementor.getOffsetTo() != null && record.offset() > implementor.getOffsetTo()) {
                 break;

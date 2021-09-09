@@ -13,6 +13,8 @@ dependency-reduced-pom.xml
 
 # debug
 owl/db/owl_db.sqlite
+owl/db/owl_db.sqlite-shm
+owl/db/owl_db.sqlite-wal
 owl.pid.lock
 
 # other scm

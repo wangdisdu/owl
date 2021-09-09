@@ -17,6 +17,12 @@ public class VerticaConfig extends JdbcConfig {
     )
     private String jdbcDriver;
 
+    @Parameter(
+            display = "Schema",
+            required = true
+    )
+    private String jdbcSchema;
+
     @Override
     public String getJdbcUrl() {
         return jdbcUrl;
@@ -36,6 +42,17 @@ public class VerticaConfig extends JdbcConfig {
     @Override
     public VerticaConfig setJdbcDriver(String jdbcDriver) {
         this.jdbcDriver = jdbcDriver;
+        return this;
+    }
+
+    @Override
+    public String getJdbcSchema() {
+        return jdbcSchema;
+    }
+
+    @Override
+    public VerticaConfig setJdbcSchema(String jdbcSchema) {
+        this.jdbcSchema = jdbcSchema;
         return this;
     }
 }

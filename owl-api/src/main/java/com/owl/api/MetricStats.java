@@ -1,9 +1,11 @@
 package com.owl.api;
 
-import com.owl.api.monitor.Data;
+import com.owl.api.monitor.Metric;
 
 import java.io.Closeable;
 
 public interface MetricStats extends Closeable {
-    Data[] stats();
+    Metric[] last();
+
+    Metric[] stats() throws Exception;
 }

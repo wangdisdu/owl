@@ -18,6 +18,7 @@ import java.util.Properties;
 @Integration(
         display = "Kafka",
         description = "Kafka Integration",
+        monitorEnable = true,
         sqlPlaceholder = "SELECT * FROM",
         icon = "Kafka.svg"
 )
@@ -64,9 +65,11 @@ public class KafkaIntegration implements IntegrationBuilder<KafkaConfig> {
                 KafkaTable table = (KafkaTable) schema.getTable(tableName);
                 rootSchema.add(tableName, table);
             }
+            KafkaStats stats = new KafkaStats(config);
             KafkaConnection result = new KafkaConnection();
             result.setConnection(con);
             result.setSchema(schema.getIntegrationSchema());
+            result.setMetricStats(stats);
             result.setIntegration(this);
             return result;
         } catch (Exception ex) {

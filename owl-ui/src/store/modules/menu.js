@@ -43,12 +43,21 @@ const actions = {
           meta: { title: name, icon: 'query', iconUrl: integration.meta.iconUrl }
         })
         if (integration.meta.monitorEnable) {
-          monitor_route.children.push({
-            path: '/monitor/' + name,
-            name: 'monitor-' + name,
-            component: () => import('@/views/monitor/index'),
-            meta: { title: name, icon: 'monitor', iconUrl: integration.meta.iconUrl }
-          })
+          if (integration.meta.display === 'Elasticsearch') {
+            monitor_route.children.push({
+              path: '/monitor/' + name,
+              name: 'monitor-' + name,
+              component: () => import('@/views/monitor/elasticsearch'),
+              meta: { title: name, icon: 'monitor', iconUrl: integration.meta.iconUrl }
+            })
+          } else if (integration.meta.display === 'Kafka') {
+            monitor_route.children.push({
+              path: '/monitor/' + name,
+              name: 'monitor-' + name,
+              component: () => import('@/views/monitor/kafka'),
+              meta: { title: name, icon: 'monitor', iconUrl: integration.meta.iconUrl }
+            })
+          }
         }
       }
       if (query_route.children.length === 0) {

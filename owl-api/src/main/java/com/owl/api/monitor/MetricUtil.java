@@ -10,15 +10,15 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataUtil {
+public class MetricUtil {
 
     public static String genGuid(String... field) {
         String str = StrUtil.join("/", field);
         return SecureUtil.md5(str);
     }
 
-    public static Data[] read(Object obj) {
-        List<Data> result = new ArrayList<>();
+    public static Metric[] read(Object obj) {
+        List<Metric> result = new ArrayList<>();
         Class<?> clazz = obj.getClass();
         Field[] fields = ReflectUtil.getFields(clazz);
         Long time = null;
@@ -29,7 +29,7 @@ public class DataUtil {
         for (Field field : fields) {
             Value va = field.getAnnotation(Value.class);
             if (va != null) {
-                Data data = new Data();
+                Metric metric = new Metric();
                 String name = va.name();
                 if (StrUtil.isEmpty(name)) {
                     name = CharSequenceUtil.toUnderlineCase(field.getName());
@@ -39,11 +39,11 @@ public class DataUtil {
                 Double value = ParamValueConverter.convertDouble(
                         ReflectUtil.getFieldValue(obj, field)
                 );
-                data.setMetric(name);
-                data.setAlias(alias);
-                data.setUnit(unit);
-                data.setValue(value);
-                result.add(data);
+                metric.setMetric(name);
+                metric.setAlias(alias);
+                metric.setUnit(unit);
+                metric.setValue(value);
+                result.add(metric);
             }
             if (field.getAnnotation(Time.class) != null) {
                 time = ParamValueConverter.convertLong(
@@ -51,7 +51,7 @@ public class DataUtil {
                 );
             }
             if (field.getAnnotation(Instance.class) != null) {
-                instance = ParamValueConverter.convertString(
+                instance = (instance == null ? "" : instance + "-") + ParamValueConverter.convertString(
                         ReflectUtil.getFieldValue(obj, field)
                 );
             }
@@ -71,35 +71,35 @@ public class DataUtil {
                 ));
             }
         }
-        for (Data data : result) {
+        for (Metric metric : result) {
             if (time != null) {
-                data.setTime(time);
+                metric.setTime(time);
             }
             if (instance != null) {
-                data.setInstance(instance);
+                metric.setInstance(instance);
             }
             if (category != null) {
-                data.setCategory(category);
+                metric.setCategory(category);
             }
             if (host != null) {
-                data.setHost(host);
+                metric.setHost(host);
             }
             if (tags.size() > 0) {
-                data.setTag1(tags.get(0));
+                metric.setTag1(tags.get(0));
             }
             if (tags.size() > 1) {
-                data.setTag2(tags.get(1));
+                metric.setTag2(tags.get(1));
             }
             if (tags.size() > 2) {
-                data.setTag3(tags.get(2));
+                metric.setTag3(tags.get(2));
             }
             if (tags.size() > 3) {
-                data.setTag4(tags.get(3));
+                metric.setTag4(tags.get(3));
             }
             if (tags.size() > 4) {
-                data.setTag5(tags.get(4));
+                metric.setTag5(tags.get(4));
             }
         }
-        return result.toArray(new Data[0]);
+        return result.toArray(new Metric[0]);
     }
 }

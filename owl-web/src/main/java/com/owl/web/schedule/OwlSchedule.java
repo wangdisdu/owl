@@ -1,7 +1,7 @@
 package com.owl.web.schedule;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.owl.api.monitor.Data;
+import com.owl.api.monitor.Metric;
 import com.owl.web.dao.entity.TbHistory;
 import com.owl.web.dao.entity.TbIntegration;
 import com.owl.web.dao.service.TbHistoryService;
@@ -35,25 +35,28 @@ public class OwlSchedule {
     private IntegrationPoolService integrationPoolService;
 
     @Async("OwlMonitorMetricCollectPool")
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void integrationMetric() {
         List<TbIntegration> list = tbIntegrationService.list();
         for (TbIntegration integration : list) {
-            logger.trace("collect metric {}", integration.getName());
+            logger.info("collect metric {}", integration.getName());
             try {
+                Metric[] data = integrationPoolService.metric(integration);
                 List<TbHistory> batch = new ArrayList<>();
-                Data[] data = integrationPoolService.metric(integration);
-                for (Data item : data) {
+                for (Metric item : data) {
                     TbHistory history = new History()
                             .copyFrom(item)
                             .copyTo(new TbHistory())
                             .setIntegrationName(integration.getName());
                     batch.add(history);
                 }
-                tbHistoryService.saveBatch(batch);
+                if (batch.size() > 0) {
+                    tbHistoryService.saveBatch(batch);
+                }
             } catch (Exception e) {
-                logger.error("collect metric error %{}", integration.getName(), e);
+                logger.error("collect metric error {}", integration.getName(), e);
             }
+            logger.info("finish metric {}", integration.getName());
         }
         // 仅保留近7天数据
         tbHistoryService.remove(new LambdaQueryWrapper<TbHistory>()

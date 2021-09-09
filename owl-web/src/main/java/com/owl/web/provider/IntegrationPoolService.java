@@ -2,7 +2,7 @@ package com.owl.web.provider;
 
 import com.owl.api.IntegrationConnection;
 import com.owl.api.IntegrationContext;
-import com.owl.api.monitor.Data;
+import com.owl.api.monitor.Metric;
 import com.owl.api.schema.DataFrame;
 import com.owl.api.schema.IntegrationSchema;
 import com.owl.common.JsonUtil;
@@ -34,10 +34,18 @@ public class IntegrationPoolService {
         return handler.getDataFrame();
     }
 
-    public Data[] metric(TbIntegration integration) {
+    public Metric[] metric(TbIntegration integration) {
         MetricCollectHandler handler = new MetricCollectHandler();
         connect(integration, handler);
         return handler.getData();
+    }
+
+    public Metric[] metricLast(TbIntegration integration) {
+        IntegrationConnection connection = connect(integration, null);
+        if (connection.getMetricStats() == null) {
+            return new Metric[0];
+        }
+        return connection.getMetricStats().last();
     }
 
     private IntegrationConnection connect(TbIntegration integration, ConnectionHandler handler) {
@@ -50,7 +58,7 @@ public class IntegrationPoolService {
             IntegrationContext context = new IntegrationContext(integration.getName(), connectionId);
             connection = IntegrationPool.connect(context, config);
         } catch (Exception e) {
-            logger.error("connect", e);
+            logger.error("failed connect to {}", integration.getName(), e);
             if (connection != null) {
                 try {
                     connection.close();
@@ -63,7 +71,7 @@ public class IntegrationPoolService {
             try {
                 handler.handle(connection);
             } catch (Exception e) {
-                logger.error("query", e);
+                logger.error("failed query", e);
                 throw new BizException(ResponseCode.FAILED, e);
             }
         }

@@ -18,7 +18,12 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
     private String tag3;
     private String tag4;
     private String tag5;
+    private Double valueGt;
+    private Double valueGte;
+    private Double valueLt;
+    private Double valueLte;
     private String integrationName;
+
 
     @Override
     public QueryWrapper<TbHistory> where(QueryWrapper<TbHistory> wrapper) {
@@ -35,6 +40,10 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
                 .eq(StrUtil.isNotEmpty(tag3), TbHistory::getTag3, tag3)
                 .eq(StrUtil.isNotEmpty(tag4), TbHistory::getTag4, tag4)
                 .eq(StrUtil.isNotEmpty(tag5), TbHistory::getTag5, tag5)
+                .gt(valueGt != null, TbHistory::getValue, valueGt)
+                .ge(valueGt != null, TbHistory::getValue, valueGte)
+                .lt(valueGt != null, TbHistory::getValue, valueLt)
+                .le(valueGt != null, TbHistory::getValue, valueLte)
                 .eq(StrUtil.isNotEmpty(integrationName), TbHistory::getIntegrationName, integrationName);
         return wrapper;
     }
@@ -144,6 +153,42 @@ public class HistoryFilterReq extends CommonFilter<TbHistory> {
 
     public HistoryFilterReq setTag5(String tag5) {
         this.tag5 = tag5;
+        return this;
+    }
+
+    public Double getValueGt() {
+        return valueGt;
+    }
+
+    public HistoryFilterReq setValueGt(Double valueGt) {
+        this.valueGt = valueGt;
+        return this;
+    }
+
+    public Double getValueGte() {
+        return valueGte;
+    }
+
+    public HistoryFilterReq setValueGte(Double valueGte) {
+        this.valueGte = valueGte;
+        return this;
+    }
+
+    public Double getValueLt() {
+        return valueLt;
+    }
+
+    public HistoryFilterReq setValueLt(Double valueLt) {
+        this.valueLt = valueLt;
+        return this;
+    }
+
+    public Double getValueLte() {
+        return valueLte;
+    }
+
+    public HistoryFilterReq setValueLte(Double valueLte) {
+        this.valueLte = valueLte;
         return this;
     }
 

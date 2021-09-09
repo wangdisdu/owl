@@ -56,7 +56,7 @@ export default {
     refreshChart() {
       this.data = []
       monitorAPI.history(this.settings.reqId, this.settings.reqBody).then(response => {
-        const records = response.result.records
+        const records = response.result
         for (var i = 0, len = records.length; i < len; i++) {
           this.data.push([records[i].time, records[i].value])
         }
