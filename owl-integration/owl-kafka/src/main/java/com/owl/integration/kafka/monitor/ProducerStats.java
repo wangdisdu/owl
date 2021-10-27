@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProducerStats {
+    public static final String PRODUCER = "producer";
+
     @Category
-    private String category = "producer";
+    private String category = PRODUCER;
     @Time
     private long timestamp;
     @Instance

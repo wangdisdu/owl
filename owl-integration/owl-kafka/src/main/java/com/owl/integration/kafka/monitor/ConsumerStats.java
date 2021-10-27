@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConsumerStats {
+    public static final String CONSUMER = "consumer";
+
     @Category
-    private String category = "consumer";
+    private String category = CONSUMER;
     @Time
     private long timestamp;
     @Instance

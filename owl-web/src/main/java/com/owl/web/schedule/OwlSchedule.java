@@ -25,7 +25,7 @@ import java.util.List;
 @EnableScheduling
 public class OwlSchedule {
     private static final Logger logger = LoggerFactory.getLogger(OwlSchedule.class);
-    private static final long retention = 7 * 24 * 3600 * 1000L; // 7days
+    private static final long retention = 24 * 3600 * 1000L; // 24 hours
 
     @Autowired
     private TbIntegrationService tbIntegrationService;
@@ -35,7 +35,7 @@ public class OwlSchedule {
     private IntegrationPoolService integrationPoolService;
 
     @Async("OwlMonitorMetricCollectPool")
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void integrationMetric() {
         List<TbIntegration> list = tbIntegrationService.list();
         for (TbIntegration integration : list) {

@@ -8,7 +8,6 @@ import com.owl.integration.kafka.monitor.ProducerStats;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,10 +35,20 @@ public class KafkaStats implements MetricStats {
         setLag(producerStats, consumerStats);
 
         for (ConsumerStats stats : consumerStats) {
-            list.addAll(new ArrayList<>(Arrays.asList(stats.stats())));
+            Metric[] metrics = stats.stats();
+            for (Metric metric : metrics) {
+                if (ConsumerStats.CONSUMER.equals(metric.getCategory())) {
+                    list.add(metric);
+                }
+            }
         }
         for (ProducerStats stats : producerStats) {
-            list.addAll(new ArrayList<>(Arrays.asList(stats.stats())));
+            Metric[] metrics = stats.stats();
+            for (Metric metric : metrics) {
+                if (ProducerStats.PRODUCER.equals(metric.getCategory())) {
+                    list.add(metric);
+                }
+            }
         }
         last = list.toArray(new Metric[0]);
         return last;
