@@ -28,16 +28,23 @@ public class IndexMapping {
         Map<String, String> result = new LinkedHashMap<>();
         while (iterator.hasNext()) {
             JsonNode root = iterator.next();
+            JsonNode mappings =  root.get("mappings");
+            if (mappings == null) {
+                continue;
+            }
             if (version.gte(EsVersion.V7_0_0)) {
-                flattenMappingProperty(null, root.get("mappings").get("properties"), result);
+                JsonNode properties = mappings.get("properties");
+                if (properties == null) {
+                    continue;
+                }
+                flattenMappingProperty(null, properties, result);
             } else {
-                Iterator<JsonNode> mappings = root.get("mappings").iterator();
-                while (mappings.hasNext()) {
-                    JsonNode mapping = mappings.next();
-                    if (!mapping.has("properties")) {
+                for (JsonNode mapping : mappings) {
+                    JsonNode properties = mapping.get("properties");
+                    if (properties == null) {
                         continue;
                     }
-                    flattenMappingProperty(null, mapping.get("properties"), result);
+                    flattenMappingProperty(null, properties, result);
                 }
             }
         }
