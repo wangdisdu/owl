@@ -6,7 +6,7 @@ owl:
 spring:
   datasource:
     # JDBC连接串
-    # sqlite仅作为开发环境使用，生产环境下请使用mysql、oracle等其它合适的数据库
+    # sqlite仅作为开发环境使用，生产环境下请使用mysql：jdbc:mysql://localhost:3306/owl
     url: jdbc:sqlite:${owl.home}/db/owl_db.sqlite
     # JDBC用户
     username:
