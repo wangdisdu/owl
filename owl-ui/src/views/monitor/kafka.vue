@@ -1,8 +1,8 @@
 <template>
-  <div v-loading="loading" class="app-container">
+  <div class="app-container">
     <div class="top-container">
       <el-tabs type="border-card">
-        <el-tab-pane label="Consumer">
+        <el-tab-pane v-loading="loadingConsumer" label="Consumer">
           <div class="search-container">
             <el-input v-model="consumerGroup" size="small" placeholder="GROUP" clearable style="width: 200px; margin-right: 20px;" />
             <el-input v-model="consumerTopic" size="small" placeholder="TOPIC" clearable style="width: 200px; margin-right: 20px;" />
@@ -33,7 +33,7 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Producer">
+        <el-tab-pane v-loading="loadingProducer" label="Producer">
           <div class="search-container">
             <el-input v-model="producerTopic" size="small" placeholder="TOPIC" clearable style="width: 200px; margin-right: 20px;" />
             <el-select v-model="producerState" size="small" placeholder="STATE" clearable style="width: 200px; margin-right: 20px;">
@@ -105,7 +105,8 @@ export default {
   data() {
     return {
       id: '',
-      loading: false,
+      loadingConsumer: false,
+      loadingProducer: false,
       consumerCurrentPage: 1,
       consumerPageSize: 10,
       consumerGroup: '',
@@ -133,9 +134,9 @@ export default {
       // 通过路由名删除前缀'monitor-'，得到id
       const id = this.$route.name.substring(8)
       this.id = id
-      this.loading = true
-      monitorAPI.metric(this.id).then(response => {
-        const consumer = filter(response.result, ['category', 'consumer'])
+      this.loadingConsumer = true
+      monitorAPI.metric(this.id, {filter: {category: 'consumer'}}).then(response => {
+        const consumer = response.result
         const consumerGroup = groupBy(consumer, 'instance')
         const consumerMetrics = []
         forIn(consumerGroup, function(value, key) {
@@ -147,7 +148,14 @@ export default {
         })
         this.consumerMetrics = consumerMetrics
         this.consumerMetricsAll = consumerMetrics
-        const producer = filter(response.result, ['category', 'producer'])
+        console.log(consumerMetrics)
+      }).catch(() => {
+      }).finally(() => {
+        this.loadingConsumer = false
+      })
+      this.loadingProducer = true
+      monitorAPI.metric(this.id, {filter: {category: 'producer'}}).then(response => {
+        const producer = response.result
         const producerGroup = groupBy(producer, 'instance')
         const producerMetrics = []
         forIn(producerGroup, function(value, key) {
@@ -161,7 +169,7 @@ export default {
         this.producerMetricsAll = producerMetrics
       }).catch(() => {
       }).finally(() => {
-        this.loading = false
+        this.loadingProducer = false
       })
     },
     consumerCurrentChange(val) {

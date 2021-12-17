@@ -85,13 +85,14 @@ public class MonitorService {
             }
         }
 
+        int total = result.size();
         int from = 0;
-        int to = data.length;
+        int to = total;
         if (req.getPage() != null && req.getSize() != null) {
             from = req.getPage() * req.getSize();
-            to = from + req.getSize();
+            to = Math.min(from + req.getSize(), total);
         }
-        return new Paged<>(data.length, result.subList(from, to));
+        return new Paged<>(total, result.subList(from, to));
     }
 
     public Paged<History> history(HistoryQueryReq req) {
